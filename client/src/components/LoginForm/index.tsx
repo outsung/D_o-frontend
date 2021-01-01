@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 
+import Box from '../Box';
+
 import callCookie from '../../utils/cookie';
 import callApi from '../../utils/api';
+import history from '../../utils/browserHistory';
+
+type loginFormProps = {
+  width: string;
+  height: string;
+};
 
 type loginReq = {
   id: string;
@@ -15,12 +23,11 @@ type loginRes = {
   tokenType: string;
 };
 
-const Login = () => {
+const LoginForm = ({ width, height }: loginFormProps) => {
   const [loginField, setLoginField] = useState({
     phoneNumber: '',
     password: '',
   });
-  const [jwt, setJwt] = useState(callCookie.get('jwt'));
 
   const { phoneNumber, password } = loginField;
 
@@ -34,37 +41,29 @@ const Login = () => {
   };
 
   const login = async () => {
-    console.log(`login!! phoneNumber: ${phoneNumber} password: ${password}`);
+    callCookie.delete('jwt');
 
-    const { tokenType, accessToken } = await callApi.post<loginReq, loginRes>(
-      'users/login',
-      {
-        id: phoneNumber,
-        password,
-      },
-    );
+    const res = await callApi.post<loginReq, loginRes>('users/login', {
+      id: phoneNumber,
+      password,
+    });
 
-    const token = `${tokenType} ${accessToken}`;
+    if (res?.result === -1)
+      return alert('회원이 아닌 핸드폰 번호이거나, 비밀번호가 틀렸습니다.');
+
+    const token = `${res?.tokenType} ${res?.accessToken}`;
     callCookie.set('jwt', token, 2);
-    setJwt(token);
 
     setLoginField({
       phoneNumber: '',
       password: '',
     });
-  };
-  const logout = () => {
-    callCookie.delete('jwt');
-    setJwt('');
-  };
-  const getUser = async () => {
-    const res = await callApi.get('users');
 
-    alert(res);
+    history.push('/main');
   };
 
   return (
-    <div>
+    <Box width={width} height={height}>
       <div>phoneNumber</div>
       <input
         name="phoneNumber"
@@ -84,14 +83,8 @@ const Login = () => {
       <button type="button" onClick={login}>
         자자 들가자~
       </button>
-      <button type="button" onClick={getUser}>
-        내 정보 얻어오기
-      </button>
-      <button type="button" onClick={logout}>
-        자자 나가자~
-      </button>
-    </div>
+    </Box>
   );
 };
 
-export default Login;
+export default LoginForm;

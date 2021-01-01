@@ -1,16 +1,55 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { LoginPage, DuoTitle, Line } from './style';
-import Box from '../../components/Box';
+import sessionStorage from '../../utils/sessionStorage';
+
+import { LoginPage, DuoTitle, IntroLineToBox, Fadein } from './style';
+import LoginForm from '../../components/LoginForm';
+
+const LINE_DURATION = 10;
+const BOX_DURATION = 1.5;
 
 const Login = () => {
-  const [loding, setLoding] = useState(0);
+  const [isIntro, setIsIntro] = useState<boolean>();
+  // const [loding, setLoding] = useState(0);
+
+  const endIntro = (): void => setIsIntro(false);
+
+  useEffect(() => {
+    const visitCount = Number(sessionStorage.get('LoginPage'));
+    if (visitCount === 0) {
+      sessionStorage.set('LoginPage', `${visitCount + 1}`);
+      setIsIntro(true);
+      setTimeout(endIntro, LINE_DURATION * 1000 + BOX_DURATION * 1000);
+    } else {
+      endIntro();
+    }
+  }, []);
+
+  if (isIntro === undefined) return <></>;
 
   return (
     <LoginPage>
-      <Line percent={`${loding} %`} />
-      <DuoTitle>D?o</DuoTitle>
-      <Box width="420px" height="240px" />
+      {isIntro ? (
+        <IntroLineToBox
+          lineDuration={LINE_DURATION}
+          boxDuration={BOX_DURATION}
+          width="420px"
+          height="240px"
+        />
+      ) : (
+        <>
+          <IntroLineToBox
+            lineDuration={0}
+            boxDuration={0}
+            width="420px"
+            height="240px"
+          />
+          <Fadein>
+            <DuoTitle>D?o</DuoTitle>
+            <LoginForm width="420px" height="240px" />
+          </Fadein>
+        </>
+      )}
     </LoginPage>
   );
 };

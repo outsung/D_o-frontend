@@ -13,7 +13,7 @@
     "@types/react-router-dom": "^5.1.6",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^7.1.0",
-    "history": "^5.0.0",
+    "history": "^4.10.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
@@ -51,7 +51,8 @@
       "no-use-before-define": "off",
       "@typescript-eslint/no-use-before-define": [
         "error"
-      ]
+      ],
+      "consistent-return": 1
     }
   },
   "browserslist": {

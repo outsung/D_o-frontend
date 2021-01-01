@@ -11,8 +11,8 @@ const Box = styled.div<boxProps>`
   // box-sizing: contets;
 
   ${(props) => `
-    width: ${props.width || '10vw'};
-    height: ${props.height || '10vw'};
+    width: ${props.width || '50%'};
+    height: ${props.height || '50%'};
 
     border: ${props.weight || '1px'} ${props.color || 'black'} solid;
   `}

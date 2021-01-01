@@ -5,21 +5,21 @@ type fetchMethod = 'get' | 'post' | 'put' | 'delete';
 
 const errorHandling = async function (
   response: Response,
-): Promise<{ ok: boolean; responseText: string }> {
+): Promise<boolean> {
   const { text, ok, status } = response;
 
   if (!ok) {
     if (status === 401) {
       callCookie.delete('jwt');
       history.push('/login');
-      return { ok, responseText: 'Available after login' };
+      return ok;
     }
 
     const responseText = await text();
     throw new Error(`Internal error : ${responseText}`);
   }
 
-  return { ok, responseText: '' };
+  return ok;
 };
 const callFetch = function <I>(
   url: string,
@@ -54,7 +54,7 @@ const callApiBase = async function <I, O>(
   url: string,
   method: fetchMethod,
   body: I | undefined = undefined,
-): Promise<O> {
+): Promise<O | undefined> {
   const serverUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const response: Response = await callFetch<I>(
@@ -63,18 +63,20 @@ const callApiBase = async function <I, O>(
     body,
   );
 
-  const { ok, responseText } = await errorHandling(response);
+  const ok = await errorHandling(response);
 
   if (ok) return toJson<O>(response);
-  throw new Error(responseText);
+
+  console.log('Available after login');
+  return undefined;
 };
 
 export default {
-  get: <I, O>(url: string): Promise<O> => callApiBase<I, O>(url, 'get'),
-  post: <I, O>(url: string, body: I): Promise<O> =>
+  get: <I, O>(url: string): Promise<O | undefined> => callApiBase<I, O>(url, 'get'),
+  post: <I, O>(url: string, body: I): Promise<O | undefined> =>
     callApiBase<I, O>(url, 'post', body),
-  put: <I, O>(url: string, body: I): Promise<O> =>
+  put: <I, O>(url: string, body: I): Promise<O | undefined> =>
     callApiBase<I, O>(url, 'put', body),
-  delete: <I, O>(url: string, body: I): Promise<O> =>
+  delete: <I, O>(url: string, body: I): Promise<O | undefined> =>
     callApiBase<I, O>(url, 'delete', body),
 };
