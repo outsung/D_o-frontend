@@ -67,7 +67,7 @@ const callApiBase = async function <I, O>(
 
   if (ok) return toJson<O>(response);
 
-  console.log('Available after login');
+  // console.log('Available after login');
   return undefined;
 };
 

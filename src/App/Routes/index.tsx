@@ -13,6 +13,7 @@ const Routes = () => (
     <Switch>
       <Route exact path={['/', '/login']} component={Login} />
       <AuthRoute exact path="/main" component={Main} />
+
       <Route component={Empty} />
     </Switch>
   </Router>

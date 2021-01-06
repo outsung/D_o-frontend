@@ -48,8 +48,7 @@ const LoginForm = ({ width, height }: loginFormProps) => {
       password,
     });
 
-    if (res?.result === -1)
-      return alert('회원이 아닌 핸드폰 번호이거나, 비밀번호가 틀렸습니다.');
+    if (res?.result === -1) return; // alert('회원이 아닌 핸드폰 번호이거나, 비밀번호가 틀렸습니다.');
 
     const token = `${res?.tokenType} ${res?.accessToken}`;
     callCookie.set('jwt', token, 2);

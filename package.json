@@ -36,10 +36,6 @@
       "react-app/jest"
     ],
     "rules": {
-      "linebreak-style": [
-        "error",
-        "windows"
-      ],
       "no-unused-vars": 1,
       "use-before-define": 0,
       "react/jsx-filename-extension": 0,

@@ -15,7 +15,7 @@ interface authRouteProps {
 const AuthRoute = ({ component, path, exact }: authRouteProps) => {
   const isLogin = Boolean(callCookie.get('jwt'));
 
-  console.log('AuthRoute check : ', callCookie.get('jwt'));
+  // console.log('AuthRoute check : ', callCookie.get('jwt'));
   if (!isLogin) history.push('/login');
 
   return <Route path={path} exact={exact} component={component} />;
