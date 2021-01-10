@@ -1,6 +1,6 @@
+/* eslint-disable */
 
 function getDistance(point1, point2) {
-  // 三平方の定理
   const a = Math.abs(point1.x - point2.x);
   const b = Math.abs(point1.y - point2.y);
   return Math.sqrt(a * a + b * b);
@@ -71,12 +71,10 @@ export default class Line {
     const point = this.points[index];
     let rad1 = Math.atan2(this.points[index - 1].y - point.y, this.points[index - 1].x - point.x);
     let rad2 = Math.atan2(this.points[index + 1].y - point.y, this.points[index + 1].x - point.x);
-    // rad1 = 0° にした、二等分線になっている
     const rad = (rad2 - rad1) / 2;
     const x = Math.cos(rad) * this.lineWidth / Math.sin(rad);
     const y = this.lineWidth;
     const distance = getDistance({ x: 0, y: 0 }, { x, y });
-    // 回転移動させる
     const rx = x * Math.cos(rad1) - y * Math.sin(rad1);
     const ry = x * Math.sin(rad1) + y * Math.cos(rad1);
     rad1 -= Math.PI / 2;

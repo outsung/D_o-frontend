@@ -6,7 +6,7 @@ import history from '../../utils/browserHistory';
 
 import Login from '../../pages/Login/index';
 import Main from '../../pages/Main';
-import Empty from '../../pages/Enpty';
+// import Empty from '../../pages/Enpty';
 
 import Hand from '../../pages/Hand';
 

@@ -81,43 +81,6 @@ function Hand() {
 
   const [HAND, setHAND] = useState<HANDtype>();
   const [marks, setMarks] = useState<any>();
-  const [ENGINE, setEngine] = useState<any>();
-
-  const up = () => {
-    // 5 초마다 무작위 힘 적용
-    // console.log(marks);
-
-    if (marks) {
-      // console.log(marks);
-      // console.log(normalize(marks[0], marks[1]));
-      if (HAND) {
-        // console.log(marks);
-        lineUpdate(HAND.HAND01, marks[0], marks[1]);
-        lineUpdate(HAND.HAND12, marks[1], marks[2]);
-        lineUpdate(HAND.HAND23, marks[2], marks[3]);
-        lineUpdate(HAND.HAND34, marks[3], marks[4]);
-
-        lineUpdate(HAND.HAND05, marks[0], marks[5]);
-        lineUpdate(HAND.HAND56, marks[5], marks[6]);
-        lineUpdate(HAND.HAND67, marks[6], marks[7]);
-        lineUpdate(HAND.HAND78, marks[7], marks[8]);
-
-        lineUpdate(HAND.HAND59, marks[5], marks[9]);
-        lineUpdate(HAND.HAND9a, marks[9], marks[10]);
-        lineUpdate(HAND.HANDab, marks[10], marks[11]);
-        lineUpdate(HAND.HANDbc, marks[11], marks[12]);
-        lineUpdate(HAND.HAND9d, marks[9], marks[13]);
-        lineUpdate(HAND.HANDde, marks[13], marks[14]);
-        lineUpdate(HAND.HANDef, marks[14], marks[15]);
-        lineUpdate(HAND.HANDfg, marks[15], marks[16]);
-        lineUpdate(HAND.HANDdh, marks[13], marks[17]);
-        lineUpdate(HAND.HANDhi, marks[17], marks[18]);
-        lineUpdate(HAND.HANDij, marks[18], marks[19]);
-        lineUpdate(HAND.HANDjk, marks[19], marks[20]);
-        lineUpdate(HAND.HAND0h, marks[0], marks[17]);
-      }
-    }
-  };
 
   useEffect(() => {
     // module aliases
@@ -135,8 +98,6 @@ function Hand() {
 
     // create an engine
     const engine = Engine.create();
-
-    setEngine(engine);
 
     // create a renderer
     const render = Render.create({
@@ -299,8 +260,37 @@ function Hand() {
   }, []);
 
   useEffect(() => {
-    up();
-  }, [marks]);
+    if (marks) {
+      // console.log(marks);
+      // console.log(normalize(marks[0], marks[1]));
+      if (HAND) {
+        // console.log(marks);
+        lineUpdate(HAND.HAND01, marks[0], marks[1]);
+        lineUpdate(HAND.HAND12, marks[1], marks[2]);
+        lineUpdate(HAND.HAND23, marks[2], marks[3]);
+        lineUpdate(HAND.HAND34, marks[3], marks[4]);
+
+        lineUpdate(HAND.HAND05, marks[0], marks[5]);
+        lineUpdate(HAND.HAND56, marks[5], marks[6]);
+        lineUpdate(HAND.HAND67, marks[6], marks[7]);
+        lineUpdate(HAND.HAND78, marks[7], marks[8]);
+
+        lineUpdate(HAND.HAND59, marks[5], marks[9]);
+        lineUpdate(HAND.HAND9a, marks[9], marks[10]);
+        lineUpdate(HAND.HANDab, marks[10], marks[11]);
+        lineUpdate(HAND.HANDbc, marks[11], marks[12]);
+        lineUpdate(HAND.HAND9d, marks[9], marks[13]);
+        lineUpdate(HAND.HANDde, marks[13], marks[14]);
+        lineUpdate(HAND.HANDef, marks[14], marks[15]);
+        lineUpdate(HAND.HANDfg, marks[15], marks[16]);
+        lineUpdate(HAND.HANDdh, marks[13], marks[17]);
+        lineUpdate(HAND.HANDhi, marks[17], marks[18]);
+        lineUpdate(HAND.HANDij, marks[18], marks[19]);
+        lineUpdate(HAND.HANDjk, marks[19], marks[20]);
+        lineUpdate(HAND.HAND0h, marks[0], marks[17]);
+      }
+    }
+  }, [marks, HAND]);
 
   return (
     <>
