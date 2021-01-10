@@ -4,8 +4,6 @@ import Page from '../pageStyle';
 
 export const LoginPage = styled.div`
   ${Page}
-  height: 60vh;
-  padding-top: 35vh;
 
   display: flex;
   flex-direction: column;

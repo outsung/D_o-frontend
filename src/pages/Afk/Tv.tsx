@@ -3,7 +3,7 @@ import { RGBAFormat, WebGLCubeRenderTarget, CubeCamera, Material } from 'three';
 import { useFrame, useResource } from 'react-three-fiber';
 import { RoundedBox, Html, Box } from '@react-three/drei';
 
-import Model from '../../components/Model';
+import Model from '../Hand/Model';
 
 import Login from '../Login';
 
@@ -88,7 +88,7 @@ function Tv() {
         scale={[0.01, 0.01, 0.01]}
         rotation={[0, -1.5708, 0]}
       >
-        <Model MTLUrl={MTLURL} OBJUrl={OBJURL} IMGUrl={IMGURL} />
+        <></>
       </group>
       <meshLambertMaterial
         ref={htmlMaterial}

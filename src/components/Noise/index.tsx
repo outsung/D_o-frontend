@@ -32,7 +32,7 @@ const Noise = styled.div`
   left: -40%;
   top: -40%;
 
-  background: #f7f3ea;
+  background: #a6586d;
   background-image: url(${background});
 
   z-index: -1;
