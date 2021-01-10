@@ -17,6 +17,7 @@
     "@types/styled-components": "^5.1.7",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^7.1.0",
+    "@types/matter-js": "^0.14.8",
     "history": "^4.10.1",
     "matter-js": "^0.15.0",
     "matter-lines": "^0.1.0",
@@ -75,8 +76,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/matter-js": "^0.14.8"
   }
 }
