@@ -8,6 +8,8 @@ import Login from '../../pages/Login/index';
 import Main from '../../pages/Main';
 import Empty from '../../pages/Enpty';
 
+import Studio from '../../pages/Studio';
+
 import Hand from '../../pages/Hand';
 
 const Routes = () => (
@@ -17,6 +19,7 @@ const Routes = () => (
 
       {/* <AuthRoute exact path="/main" component={Main} /> */}
       <Route exact path="/main" component={Main} />
+      <Route exact path="/studio" component={Studio} />
 
       <Route exact path="/hand" component={Hand} />
 

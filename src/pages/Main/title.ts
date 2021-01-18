@@ -1,18 +1,6 @@
 
 import {
-  Engine,
-  Render,
-  World,
-  Composites,
-  Common,
   Bodies,
-  Vertices,
-  Svg,
-  Vector,
-  Composite,
-  IBodyDefinition,
-  Constraint,
-  Body,
 } from 'matter-js';
 
 import Line from '../Hand/line';

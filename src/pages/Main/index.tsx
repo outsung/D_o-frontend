@@ -6,11 +6,7 @@ import {
   Composites,
   Common,
   Bodies,
-  Vertices,
-  Svg,
   Vector,
-  Composite,
-  Body,
   Constraint,
   Mouse,
   MouseConstraint,
@@ -46,7 +42,6 @@ const Main = () => {
       },
     });
 
-    console.log();
     // create two boxes and a ground
     // add bodies
     const stack = Composites.stack(5, 5, 14, 9, 0, -3, (x: any, y: any) =>
@@ -131,7 +126,7 @@ const Main = () => {
     Mouse.setScale(mouse, Vector.create(400 / innerWidth, 300 / innerHeight));
     Mouse.setOffset(mouse, render.bounds.min);
 
-    console.log(render.bounds);
+    // console.log(render.bounds);
   }, []);
   return (
     <>
