@@ -19,26 +19,29 @@ const noiseAnimation = keyframes`
   100% {${noiseAnimationGenerator(5, 0)}}
 `;
 
-const Noise = styled.div`
-  position: fixed;
+export const Noise = styled.div`
+  pointer-events: none;
 
-  /*
-  width: 100%;
-  height: 180%;
-  */
+  position: fixed;
 
   width: 180%;
   height: 180%;
   left: -40%;
   top: -40%;
 
-  background: #a6586d;
   background-image: url(${background});
 
-  z-index: -1;
+  z-index: 10;
 
   -webkit-animation: ${noiseAnimation} 1s steps(4) infinite;
   animation: ${noiseAnimation} 1s steps(4) infinite;
 `;
 
-export default Noise;
+export const Background = styled.div`
+  position: fixed;
+
+  width: 100%;
+  height: 180%;
+
+  background: #a6586d;
+`;
