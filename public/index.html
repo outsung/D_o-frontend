@@ -26,6 +26,17 @@
     -->
     <title>React App</title>
     
+    <script>
+      (function(l) {
+        // 파싱 결과를 토대로 URI 내용을 대체한다
+        window.history.replaceState(null, null,
+          l.pathname.slice(0, -1) + (q.p || '') +
+          (q.q ? ('?' + q.q) : '') +
+          l.hash
+        );
+      }(window.location)
+    </script>
+
     <script src="pathseg.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
