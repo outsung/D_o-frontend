@@ -38,6 +38,8 @@ export const Noise = styled.div`
 `;
 
 export const Background = styled.div`
+  z-index: -1;
+
   position: fixed;
 
   width: 100%;
