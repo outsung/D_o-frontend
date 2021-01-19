@@ -34,7 +34,7 @@ const Studio = () => {
 
   return (
     <StudioPage>
-      <WaitingBnt onClick={addWaiting}>start Maching</WaitingBnt>
+      <WaitingBnt onClick={addWaiting}>start Matching</WaitingBnt>
       <Canvas
         colorManagement
         shadowMap
@@ -108,4 +108,5 @@ const Studio = () => {
     </StudioPage>
   );
 };
+
 export default Studio;
