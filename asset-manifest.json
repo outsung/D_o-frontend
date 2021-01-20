@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/Duo-frontend/static/css/main.7bb05dfd.chunk.css",
-    "main.js": "/Duo-frontend/static/js/main.4836a7e3.chunk.js",
-    "main.js.map": "/Duo-frontend/static/js/main.4836a7e3.chunk.js.map",
-    "runtime-main.js": "/Duo-frontend/static/js/runtime-main.84ed2115.js",
-    "runtime-main.js.map": "/Duo-frontend/static/js/runtime-main.84ed2115.js.map",
-    "static/js/2.b6e7cb06.chunk.js": "/Duo-frontend/static/js/2.b6e7cb06.chunk.js",
-    "static/js/2.b6e7cb06.chunk.js.map": "/Duo-frontend/static/js/2.b6e7cb06.chunk.js.map",
-    "static/js/3.0b43d6e7.chunk.js": "/Duo-frontend/static/js/3.0b43d6e7.chunk.js",
-    "static/js/3.0b43d6e7.chunk.js.map": "/Duo-frontend/static/js/3.0b43d6e7.chunk.js.map",
-    "static/js/4.3d7cfc3f.chunk.js": "/Duo-frontend/static/js/4.3d7cfc3f.chunk.js",
-    "static/js/4.3d7cfc3f.chunk.js.map": "/Duo-frontend/static/js/4.3d7cfc3f.chunk.js.map",
-    "index.html": "/Duo-frontend/index.html",
-    "static/css/main.7bb05dfd.chunk.css.map": "/Duo-frontend/static/css/main.7bb05dfd.chunk.css.map",
-    "static/js/2.b6e7cb06.chunk.js.LICENSE.txt": "/Duo-frontend/static/js/2.b6e7cb06.chunk.js.LICENSE.txt",
-    "static/media/background.e0cc6fb1.png": "/Duo-frontend/static/media/background.e0cc6fb1.png"
+    "main.css": "https://outsung.github.io/Duo-frontend/static/css/main.7bb05dfd.chunk.css",
+    "main.js": "https://outsung.github.io/Duo-frontend/static/js/main.ffe7fac7.chunk.js",
+    "main.js.map": "https://outsung.github.io/Duo-frontend/static/js/main.ffe7fac7.chunk.js.map",
+    "runtime-main.js": "https://outsung.github.io/Duo-frontend/static/js/runtime-main.401e082d.js",
+    "runtime-main.js.map": "https://outsung.github.io/Duo-frontend/static/js/runtime-main.401e082d.js.map",
+    "static/js/2.6c27584d.chunk.js": "https://outsung.github.io/Duo-frontend/static/js/2.6c27584d.chunk.js",
+    "static/js/2.6c27584d.chunk.js.map": "https://outsung.github.io/Duo-frontend/static/js/2.6c27584d.chunk.js.map",
+    "static/js/3.0b43d6e7.chunk.js": "https://outsung.github.io/Duo-frontend/static/js/3.0b43d6e7.chunk.js",
+    "static/js/3.0b43d6e7.chunk.js.map": "https://outsung.github.io/Duo-frontend/static/js/3.0b43d6e7.chunk.js.map",
+    "static/js/4.3d7cfc3f.chunk.js": "https://outsung.github.io/Duo-frontend/static/js/4.3d7cfc3f.chunk.js",
+    "static/js/4.3d7cfc3f.chunk.js.map": "https://outsung.github.io/Duo-frontend/static/js/4.3d7cfc3f.chunk.js.map",
+    "index.html": "https://outsung.github.io/Duo-frontend/index.html",
+    "static/css/main.7bb05dfd.chunk.css.map": "https://outsung.github.io/Duo-frontend/static/css/main.7bb05dfd.chunk.css.map",
+    "static/js/2.6c27584d.chunk.js.LICENSE.txt": "https://outsung.github.io/Duo-frontend/static/js/2.6c27584d.chunk.js.LICENSE.txt",
+    "static/media/background.e0cc6fb1.png": "https://outsung.github.io/Duo-frontend/static/media/background.e0cc6fb1.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.84ed2115.js",
-    "static/js/2.b6e7cb06.chunk.js",
+    "static/js/runtime-main.401e082d.js",
+    "static/js/2.6c27584d.chunk.js",
     "static/css/main.7bb05dfd.chunk.css",
-    "static/js/main.4836a7e3.chunk.js"
+    "static/js/main.ffe7fac7.chunk.js"
   ]
 }
