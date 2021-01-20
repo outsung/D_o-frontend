@@ -30,6 +30,7 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+          PUBLIC_URL: https://outsung.github.io/Duo-frontend/history/${{github.event.head_commit.message}}
 
       - name: Setup assets
         run: mkdir -p ./deploy
