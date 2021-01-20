@@ -30,10 +30,23 @@ jobs:
         env:
           NODE_ENV: production
 
+      - name: Setup assets
+        run: |
+          mkdir ./master
+          mkdir -p ./build/history
+
+      - name: checkout Master
+        uses: actions/checkout@v2
+        with:
+          ref: 'master'
+          path: '/master'
+
+      - name: Move build to deploy
+        run: mv ./master/history ./build
+
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v2.5.0
-        env:
-          PERSONAL_TOKEN: ${{secrets.GH_PAT}}
-          PUBLISH_BRANCH: master
-          PUBLISH_DIR: ./build
-          SCRIPT_MODE: true
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: ${{secrets.GH_PAT}}
+          publish_branch: master
+          publish_dir: ./build

@@ -45,16 +45,10 @@ permalink: /404.html
         window.location.replace(replaceUrl);
       }
       else{
-        replaceUrl = encoded(window.location, 4);
+        replaceUrl = encoded(window.location, 3);
         console.log(`404.html in js : [history] : URL ${replaceUrl}`);
         window.location.replace(replaceUrl);
       }
-
-
-      console.log(`404.html in js URL : ${replaceUrl}`);
-
-      l.replace(replaceUrl);
-
     </script>
   </head>
   <body>
