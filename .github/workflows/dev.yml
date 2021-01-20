@@ -39,7 +39,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: 'master'
-          path: '/master'
+          path: './master'
 
       - name: Move build to deploy
         run: mv ./master/history ./build
