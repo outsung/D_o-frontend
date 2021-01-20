@@ -38,7 +38,7 @@ jobs:
         run: mv ./build ./deploy
 
       - name: Rename
-        run: rename build ${{github.event.head_commit.message}} build
+        run: mv ./deploy/build ./deploy/${{github.event.head_commit.message}}
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
