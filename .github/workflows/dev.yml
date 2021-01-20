@@ -26,10 +26,9 @@ jobs:
         run: npm install --prod --pure-lockfile
 
       - name: Build
-        run: PUBLIC_URL="https://outsung.github.io/Duo-frontend/" npm run build
+        run: npm run build
         env:
           NODE_ENV: production
-          PUBLIC_URL: https://outsung.github.io/Duo-frontend/
 
       - name: Setup assets
         run: |
