@@ -39,14 +39,15 @@ permalink: /404.html
 
       let replaceUrl = encoded(window.location, 1);
       
-      if(replaceUrl.indexOf("history") != -1){
+      console.log(replaceUrl);
+      if(replaceUrl.indexOf("history") == -1){
         console.log(`404.html in js : [not history] : URL ${replaceUrl}`);
-        l.replace(replaceUrl);
+        window.location.replace(replaceUrl);
       }
       else{
         replaceUrl = encoded(window.location, 4);
         console.log(`404.html in js : [history] : URL ${replaceUrl}`);
-        l.replace(replaceUrl);
+        window.location.replace(replaceUrl);
       }
 
 
