@@ -4,7 +4,7 @@ on:
     branches:
       - dev
 jobs:
-  update:
+  Dev_Deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -25,27 +25,29 @@ jobs:
       - name: Install dependencies
         run: npm install --prod --pure-lockfile
 
-      - name: Build
-        run: PUBLIC_URL=https://outsung.github.io/Duo-frontend/ npm run build
+      - name: A)
+        run: sed -i 's/#homepage/https:\/\/outsung.github.io\/Duo-frontend\//g' package.json
+
+      - name: B) Build
+        run: npm run build
         env:
           NODE_ENV: production
-          PUBLIC_URL: https://outsung.github.io/Duo-frontend/
 
-      - name: Setup assets
+      - name: C) Setup assets
         run: |
           mkdir ./master
           mkdir -p ./build/history
 
-      - name: checkout Master
+      - name: D) checkout Master
         uses: actions/checkout@v2
         with:
           ref: 'master'
           path: './master'
 
-      - name: Move build to deploy
+      - name: E) Move build to deploy
         run: mv ./master/history ./build
 
-      - name: Deploy
+      - name: F) Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           personal_token: ${{secrets.GH_PAT}}

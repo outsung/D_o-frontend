@@ -5,7 +5,7 @@ on:
       - main
 
 jobs:
-  update:
+  Main_Deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -26,21 +26,24 @@ jobs:
       - name: Install dependencies
         run: npm install --prod --pure-lockfile
 
-      - name: Build
-        run: PUBLIC_URL=https://outsung.github.io/Duo-frontend/history/${{github.event.head_commit.message}} npm run build
+      - name: A)
+        run: sed -i 's/#homepage/https:\/\/outsung.github.io\/Duo-frontend\/history\/${{github.event.head_commit.message}}/g' package.json
+
+      - name: B) Build
+        run: npm run build
         env:
           NODE_ENV: production
 
-      - name: Setup assets
+      - name: C) Setup assets
         run: mkdir -p ./deploy
 
-      - name: Move build to deploy
+      - name: D) Move build to deploy
         run: mv ./build ./deploy
 
-      - name: Rename
+      - name: E) Rename
         run: mv ./deploy/build ./deploy/${{github.event.head_commit.message}}
 
-      - name: Deploy
+      - name: F) Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           personal_token: ${{secrets.GH_PAT}}
