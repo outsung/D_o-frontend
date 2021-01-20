@@ -32,9 +32,13 @@ jobs:
           NODE_ENV: production
 
       - name: Setup assets
-        run: mkdir -p ./deploy/${{github.event.head_commit.message}}
+        run: mkdir -p ./deploy
+
       - name: Move build to deploy
-        run: mv ./build ./deploy/${{github.event.head_commit.message}}
+        run: mv ./build ./deploy
+
+      - name: Rename
+        run: rename build ${{github.event.head_commit.message}} build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

@@ -5,7 +5,7 @@ import { LoginPage } from './style';
 
 const Login = () => (
   <LoginPage>
-    <h1>안녕하세요 v.1 입니다.</h1>
+    <h1>안녕하세요 v.0 입니다.</h1>
   </LoginPage>
 );
 export default Login;
