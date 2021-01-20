@@ -26,7 +26,7 @@ jobs:
         run: npm install --prod --pure-lockfile
 
       - name: Build
-        run: PUBLIC_URL=https://outsung.github.io/Duo-frontend/ npm run build
+        run: PUBLIC_URL=https://outsung.github.io/Duo-frontend/ react-scripts build
         env:
           NODE_ENV: production
 
