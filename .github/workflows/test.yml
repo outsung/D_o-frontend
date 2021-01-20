@@ -1,4 +1,4 @@
-name: Deploy Project
+name: Dev Deploy
 on:
   push:
     branches:
@@ -8,10 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+
       - name: Set up Node.js
         uses: actions/setup-node@master
         with:
           node-version: 12.x
+
       - name: Cache node_modules
         uses: actions/cache@v1
         with:
@@ -19,6 +21,7 @@ jobs:
           key: ${{runner.OS}}-build-${{hashFiles('**/yarn.lock')}}
           restore-keys: |
             ${{ runner.OS }}-build-${{ runner.OS }}-
+
       - name: Install dependencies
         run: npm install --prod --pure-lockfile
 
@@ -26,6 +29,7 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v2.5.0
         env:
@@ -33,3 +37,51 @@ jobs:
           PUBLISH_BRANCH: master
           PUBLISH_DIR: ./build
           SCRIPT_MODE: true
+
+name: Main Deploy
+on:
+  push:
+    branches:
+      - main
+      
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Set up Node.js
+        uses: actions/setup-node@master
+        with:
+          node-version: 12.x
+
+      - name: Cache node_modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{runner.OS}}-build-${{hashFiles('**/yarn.lock')}}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ runner.OS }}-
+
+      - name: Install dependencies
+        run: npm install --prod --pure-lockfile
+
+      - name: Build
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Setup assets
+        run: mkdir -p ./deploy/${{github.event.head_commit.message}}
+      - name: Move build to deploy
+        run: mv ./build ./deploy/${{github.event.head_commit.message}}
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        env:
+          PERSONAL_TOKEN: ${{secrets.GH_PAT}}
+          PUBLISH_BRANCH: master
+          PUBLISH_DIR: ./deploy
+          destination_dir : ./history
+          keep_files : true
+
