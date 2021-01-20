@@ -15,7 +15,8 @@ import Hand from '../../pages/Hand';
 const Routes = () => (
   <Router history={history}>
     <Switch>
-      <Route exact path={['/', '/login']} component={Login} />
+      <Route exact path="/" component={Login} />
+      <Route exact path="/login" component={Login} />
 
       {/* <AuthRoute exact path="/main" component={Main} /> */}
       <Route exact path="/main" component={Main} />
