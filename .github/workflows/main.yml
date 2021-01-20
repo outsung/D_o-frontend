@@ -38,9 +38,9 @@ jobs:
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
-        env:
-          PERSONAL_TOKEN: ${{secrets.GH_PAT}}
-          PUBLISH_BRANCH: master
-          PUBLISH_DIR: ./deploy
+        with:
+          personal_token: ${{secrets.GH_PAT}}
+          publish_branch: master
+          publish_dir: ./deploy
           destination_dir: ./history
           keep_files: true

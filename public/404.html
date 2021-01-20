@@ -26,16 +26,29 @@ permalink: /404.html
       // https://username.github.io/repo-name/one/two?a=b&c=d#qwe becomes
       // https://username.github.io/repo-name/?/one/two&a=b~and~c=d#qwe
       // Otherwise, leave pathSegmentsToKeep as 0.
-      var pathSegmentsToKeep = 1;
 
-      var l = window.location;
-      const replaceUrl = (
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash
-      );
+      function encoded(l, pathSegmentsToKeep){
+        return (
+          l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+          l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+          l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash
+        );
+      }
+
+      let replaceUrl = encoded(window.location, 1);
+      
+      if(replaceUrl.indexOf("history") != -1){
+        console.log(`404.html in js : [not history] : URL ${replaceUrl}`);
+        l.replace(replaceUrl);
+      }
+      else{
+        replaceUrl = encoded(window.location, 4);
+        console.log(`404.html in js : [history] : URL ${replaceUrl}`);
+        l.replace(replaceUrl);
+      }
+
 
       console.log(`404.html in js URL : ${replaceUrl}`);
 
