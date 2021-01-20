@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "https://outsung.github.io/Duo-frontend/static/css/main.7bb05dfd.chunk.css",
-    "main.js": "https://outsung.github.io/Duo-frontend/static/js/main.ffe7fac7.chunk.js",
-    "main.js.map": "https://outsung.github.io/Duo-frontend/static/js/main.ffe7fac7.chunk.js.map",
+    "main.js": "https://outsung.github.io/Duo-frontend/static/js/main.dfcacf06.chunk.js",
+    "main.js.map": "https://outsung.github.io/Duo-frontend/static/js/main.dfcacf06.chunk.js.map",
     "runtime-main.js": "https://outsung.github.io/Duo-frontend/static/js/runtime-main.401e082d.js",
     "runtime-main.js.map": "https://outsung.github.io/Duo-frontend/static/js/runtime-main.401e082d.js.map",
     "static/js/2.6c27584d.chunk.js": "https://outsung.github.io/Duo-frontend/static/js/2.6c27584d.chunk.js",
@@ -20,6 +20,6 @@
     "static/js/runtime-main.401e082d.js",
     "static/js/2.6c27584d.chunk.js",
     "static/css/main.7bb05dfd.chunk.css",
-    "static/js/main.ffe7fac7.chunk.js"
+    "static/js/main.dfcacf06.chunk.js"
   ]
 }
