@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import Box from '../Box';
 
@@ -28,6 +29,7 @@ const LoginForm = ({ width, height }: loginFormProps) => {
     phoneNumber: '',
     password: '',
   });
+  const loginBtn = useRef({} as HTMLButtonElement);
 
   const { phoneNumber, password } = loginField;
 
@@ -40,15 +42,24 @@ const LoginForm = ({ width, height }: loginFormProps) => {
     });
   };
 
-  const login = async () => {
-    callCookie.delete('jwt');
+  const login = async function () {
+    loginBtn.current.disabled = true;
 
     const res = await callApi.post<loginReq, loginRes>('users/login', {
       id: phoneNumber,
       password,
     });
 
-    if (res?.result === -1) return; // alert('회원이 아닌 핸드폰 번호이거나, 비밀번호가 틀렸습니다.');
+    if (res?.result === -1) {
+      setLoginField({
+        phoneNumber: '',
+        password: '',
+      });
+
+      alert('회원이 아닌 핸드폰 번호이거나, 비밀번호가 틀렸습니다.');
+      loginBtn.current.disabled = false;
+      return;
+    }
 
     const token = `${res?.tokenType} ${res?.accessToken}`;
     callCookie.set('jwt', token, 2);
@@ -60,6 +71,10 @@ const LoginForm = ({ width, height }: loginFormProps) => {
 
     history.push('/main');
   };
+
+  useEffect(() => {
+    callCookie.delete('jwt');
+  }, []);
 
   return (
     <Box width={width} height={height}>
@@ -79,9 +94,10 @@ const LoginForm = ({ width, height }: loginFormProps) => {
         value={password}
         onChange={changeState}
       />
-      <button type="button" onClick={login}>
-        자자 들가자~
+      <button ref={loginBtn} type="button" onClick={login}>
+        로그인하기
       </button>
+      <Link to="/signup">회원가입</Link>
     </Box>
   );
 };

@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 // import * as THREE from 'three';
 import { Canvas } from 'react-three-fiber';
 import { softShadows } from '@react-three/drei';
@@ -13,28 +13,37 @@ import { StudioPage, WaitingBnt } from './style';
 
 import TextGeometry from '../../components/TextGeometry';
 
+// @api
+import { allget, usersType } from '../../container/user/allGet';
+
 function getRandomArbitrary(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
-function getRandomInt(min: number, max: number) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min; // 최댓값은 제외, 최솟값은 포함
-}
 
-const BOX_COLOR = ['#A6586D', '#394873', '#F27272', '#F2A663', '#F28B66'];
+// function getRandomInt(min: number, max: number) {
+//   min = Math.ceil(min);
+//   max = Math.floor(max);
+//   return Math.floor(Math.random() * (max - min)) + min; // 최댓값은 제외, 최솟값은 포함
+// }
+
+// const BOX_COLOR = ['#A6586D', '#394873', '#F27272', '#F2A663', '#F28B66'];
 
 softShadows({});
 
 const Studio = () => {
-  const [waiting, setWaiting] = useState([{ color: 1 }]);
-  const addWaiting = () => {
-    setWaiting([...waiting, { color: getRandomInt(0, 5) }]);
+  const [users, setUsers] = useState<usersType>();
+
+  const init = async function () {
+    setUsers(await allget());
   };
+
+  useEffect(() => {
+    init();
+  }, []);
 
   return (
     <StudioPage>
-      <WaitingBnt onClick={addWaiting}>start Matching</WaitingBnt>
+      <WaitingBnt>Next +4</WaitingBnt>
       <Canvas
         colorManagement
         shadowMap
@@ -65,21 +74,29 @@ const Studio = () => {
             <PhyPlane position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]} />
             <PhyPlane position={[0, 0, -5]} />
             <PhyPlane position={[8, 0, 0]} rotation={[0, -Math.PI / 2, 0]} />
-            {waiting.map(({ color }) => (
-              <PhyBox
-                color={BOX_COLOR[color]}
-                rotation={[
-                  getRandomArbitrary(0, Math.PI),
-                  getRandomArbitrary(0, Math.PI),
-                  getRandomArbitrary(0, Math.PI),
-                ]}
-                position={[
-                  getRandomArbitrary(-1, 1),
-                  4,
-                  getRandomArbitrary(2, 4),
-                ]}
-              />
-            ))}
+
+            {users ? (
+              users.map((user) => (
+                <PhyBox
+                  key={`k${user.id}`}
+                  email={user.id}
+                  color="#575757"
+                  rotation={[
+                    getRandomArbitrary(0, Math.PI),
+                    getRandomArbitrary(0, Math.PI),
+                    getRandomArbitrary(0, Math.PI),
+                  ]}
+                  position={[
+                    getRandomArbitrary(-1, 1),
+                    4,
+                    getRandomArbitrary(2, 4),
+                  ]}
+                />
+              ))
+            ) : (
+              <></>
+            )}
+
             <TextGeometry
               receiveShadow
               castShadow

@@ -1,11 +1,22 @@
 import React from 'react';
 
-import { LoginPage } from './style';
-// import LoginForm from '../../components/LoginForm';
+import { LoginPage, DuoTitle, IntroLineToBox, Fadein } from './style';
+import LoginForm from '../../components/LoginForm';
 
-const Login = () => (
-  <LoginPage>
-    <h1>안녕하세요 v.1 login 화면 입니다.</h1>
-  </LoginPage>
-);
+function Login() {
+  return (
+    <LoginPage>
+      <IntroLineToBox
+        lineDuration={0}
+        boxDuration={0}
+        width="420px"
+        height="240px"
+      />
+      <Fadein>
+        <DuoTitle>D?o</DuoTitle>
+        <LoginForm width="420px" height="240px" />
+      </Fadein>
+    </LoginPage>
+  );
+}
 export default Login;

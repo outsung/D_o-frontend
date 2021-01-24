@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 // import { MeshProps } from 'react-three-fiber';
-import { Plane, Box } from '@react-three/drei';
+import { Plane, Box, HTML } from '@react-three/drei';
 import {
   useBox,
   usePlane,
@@ -21,9 +21,11 @@ export function PhyPlane({ ...props }: PlaneProps) {
 }
 
 interface phyBoxProps extends BoxProps {
+  email: string;
   color: string;
 }
-export function PhyBox({ color, ...props }: phyBoxProps) {
+export function PhyBox({ email, color, ...props }: phyBoxProps) {
+  const [hovered, setHover] = useState(false);
   const [ref, api] = useBox(() => ({
     args: [0.5, 0.5, 0.5],
     mass: 1,
@@ -37,8 +39,20 @@ export function PhyBox({ color, ...props }: phyBoxProps) {
       args={[0.5, 0.5, 0.5]}
       ref={ref}
       onClick={() => api.applyImpulse([5, 0, -5], [0, 0, 0])}
+      onPointerOver={() => setHover(true)}
+      onPointerOut={() => setHover(false)}
     >
-      <meshStandardMaterial color={color} />
+      <meshStandardMaterial
+        color={color}
+        transparent
+        opacity={hovered ? 1 : 0.3}
+      />
+      <HTML
+        scaleFactor={10}
+        style={{ pointerEvents: 'none', display: hovered ? 'block' : 'none' }}
+      >
+        <div className="content">id : {email}</div>
+      </HTML>
     </Box>
   );
 }
