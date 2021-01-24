@@ -50,6 +50,7 @@ const LoginForm = () => {
 
   const login = async function () {
     loginBtnRef.current.disabled = true;
+    loginBtnRef.current.classList.add('on');
 
     const res = await callApi.post<loginReq, loginRes>('users/login', {
       id: email,
@@ -64,6 +65,8 @@ const LoginForm = () => {
 
       alert('회원이 아닌 핸드폰 번호이거나, 비밀번호가 틀렸습니다.');
       loginBtnRef.current.disabled = false;
+      loginBtnRef.current.classList.remove('on');
+
       return;
     }
 
@@ -86,8 +89,9 @@ const LoginForm = () => {
     <>
       <Container>
         <Input
+          autoComplete="off"
           name="email"
-          placeholder="email"
+          placeholder="e-mail"
           value={email}
           onChange={changeState}
         />

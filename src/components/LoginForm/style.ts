@@ -16,14 +16,23 @@ export const Container = styled.div`
 `;
 
 export const Input = styled.input`
-  border: solid 1px #dadada;
-
   margin-bottom: 8px;
+  
+  border: solid 1px #dadada;
+  border-radius: 6px;
+
+  padding-left: 10px;
 
   width: 90%;
-  height: 29px;
+  height: 45px;
   
-  background: #fff;
+  font-size: 16px;
+
+  background: #FFFAFA;
+
+  &:focus{
+    outline: none;
+  }
 `;
 
 export const InputName = styled.div`
@@ -82,4 +91,10 @@ export const LoginBtn = styled.button`
 
   background-color: #F2A663;
 
+  cursor: pointer;
+
+  &.on{
+    background-color: #D99559;
+    color: #E6E1E1;
+  }
 `;

@@ -8,15 +8,16 @@ export const LoginPage = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
 `;
 
 
 export const DuoTitle = styled.div`
+  margin-bottom: 100px;
 
-  color: #F2A663;
   font-size: 30vh;
   font-weight: bold;
+
+  color: #F2A663;
 `;
 
 
