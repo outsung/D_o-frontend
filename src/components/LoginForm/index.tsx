@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 
+import { Input, InputName, LoginBtn, SignupLink } from './style';
 import Box from '../Box';
 
 import callCookie from '../../utils/cookie';
@@ -26,12 +26,12 @@ type loginRes = {
 
 const LoginForm = ({ width, height }: loginFormProps) => {
   const [loginField, setLoginField] = useState({
-    phoneNumber: '',
+    email: '',
     password: '',
   });
-  const loginBtn = useRef({} as HTMLButtonElement);
+  const loginBtnRef = useRef({} as HTMLButtonElement);
 
-  const { phoneNumber, password } = loginField;
+  const { email, password } = loginField;
 
   const changeState = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -43,21 +43,21 @@ const LoginForm = ({ width, height }: loginFormProps) => {
   };
 
   const login = async function () {
-    loginBtn.current.disabled = true;
+    loginBtnRef.current.disabled = true;
 
     const res = await callApi.post<loginReq, loginRes>('users/login', {
-      id: phoneNumber,
+      id: email,
       password,
     });
 
     if (res?.result === -1) {
       setLoginField({
-        phoneNumber: '',
+        email: '',
         password: '',
       });
 
       alert('회원이 아닌 핸드폰 번호이거나, 비밀번호가 틀렸습니다.');
-      loginBtn.current.disabled = false;
+      loginBtnRef.current.disabled = false;
       return;
     }
 
@@ -65,7 +65,7 @@ const LoginForm = ({ width, height }: loginFormProps) => {
     callCookie.set('jwt', token, 2);
 
     setLoginField({
-      phoneNumber: '',
+      email: '',
       password: '',
     });
 
@@ -78,26 +78,27 @@ const LoginForm = ({ width, height }: loginFormProps) => {
 
   return (
     <Box width={width} height={height}>
-      <div>phoneNumber</div>
-      <input
-        name="phoneNumber"
-        placeholder="phoneNumber"
-        value={phoneNumber}
+      <InputName>email</InputName>
+      <Input
+        name="email"
+        placeholder="email"
+        value={email}
         onChange={changeState}
       />
 
-      <div>password</div>
-      <input
+      <InputName>password</InputName>
+      <Input
         name="password"
         placeholder="password"
         type="password"
         value={password}
         onChange={changeState}
       />
-      <button ref={loginBtn} type="button" onClick={login}>
+
+      <LoginBtn ref={loginBtnRef} type="button" onClick={login}>
         로그인하기
-      </button>
-      <Link to="/signup">회원가입</Link>
+      </LoginBtn>
+      <SignupLink to="/signup">회원가입</SignupLink>
     </Box>
   );
 };
