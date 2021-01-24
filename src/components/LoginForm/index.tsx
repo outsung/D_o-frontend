@@ -12,10 +12,10 @@ import callCookie from '../../utils/cookie';
 import callApi from '../../utils/api';
 import history from '../../utils/browserHistory';
 
-type loginFormProps = {
-  width: string;
-  height: string;
-};
+// type loginFormProps = {
+//   width: string;
+//   height: string;
+// };
 
 type loginReq = {
   id: string;
@@ -29,7 +29,8 @@ type loginRes = {
   tokenType: string;
 };
 
-const LoginForm = ({ width, height }: loginFormProps) => {
+// const LoginForm = ({ width, height }: loginFormProps) => {
+const LoginForm = () => {
   const [loginField, setLoginField] = useState({
     email: '',
     password: '',

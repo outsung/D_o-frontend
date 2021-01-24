@@ -7,7 +7,7 @@ function Login() {
   return (
     <LoginPage>
       <DuoTitle>D?o</DuoTitle>
-      <LoginForm width="420px" height="240px" />
+      <LoginForm />
     </LoginPage>
   );
 }
