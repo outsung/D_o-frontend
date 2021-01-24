@@ -12,7 +12,7 @@ export const LoginPage = styled.div`
 
 
 export const DuoTitle = styled.div`
-  margin-bottom: 100px;
+  margin-bottom: 165px;
 
   font-size: 30vh;
   font-weight: bold;

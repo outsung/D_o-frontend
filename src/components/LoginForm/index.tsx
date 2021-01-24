@@ -91,14 +91,14 @@ const LoginForm = () => {
         <Input
           autoComplete="off"
           name="email"
-          placeholder="e-mail"
+          placeholder="E-mail"
           value={email}
           onChange={changeState}
         />
 
         <Input
           name="password"
-          placeholder="password"
+          placeholder="Password"
           type="password"
           value={password}
           onChange={changeState}

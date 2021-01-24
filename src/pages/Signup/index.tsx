@@ -1,11 +1,17 @@
 import React, { useState, useRef } from 'react';
+import {
+  SignupPage,
+  DuoTitle,
+  Container,
+  Input,
+  LinkContainer,
+  LoginLink,
+  FindLink,
+  SignupBtn,
+} from './style';
 
 import callApi from '../../utils/api';
 import history from '../../utils/browserHistory';
-
-import Box from '../../components/Box';
-
-import { SignupPage, DuoTitle } from './style';
 
 type signupReq = {
   id: string;
@@ -21,12 +27,13 @@ function Signup() {
   const [signupField, setSignupField] = useState({
     email: '',
     password: '',
+    rPassword: '',
     nickname: '',
   });
 
   const signupBtn = useRef({} as HTMLButtonElement);
 
-  const { email, password, nickname } = signupField;
+  const { email, password, rPassword, nickname } = signupField;
 
   const changeState = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -39,6 +46,21 @@ function Signup() {
 
   const signup = async function () {
     signupBtn.current.disabled = true;
+    signupBtn.current.classList.add('on');
+    // console.log(res);
+
+    if (!(email && password && nickname && rPassword)) {
+      alert('필드가 비어있습니다.');
+      signupBtn.current.disabled = false;
+      signupBtn.current.classList.remove('on');
+      return;
+    }
+    if (password !== rPassword) {
+      alert('비밀번호가 다릅니다.');
+      signupBtn.current.disabled = false;
+      signupBtn.current.classList.remove('on');
+      return;
+    }
 
     const res = await callApi.post<signupReq, signupRes>('users/signup', {
       id: email,
@@ -46,23 +68,26 @@ function Signup() {
       nickname,
     });
 
-    // console.log(res);
-
     if (res?.result === -1) {
       setSignupField({
         email: '',
         password: '',
+        rPassword: '',
         nickname: '',
       });
 
       alert('이미 있는 이메일입니다.');
+
       signupBtn.current.disabled = false;
+      signupBtn.current.classList.remove('on');
+
       return;
     }
 
     setSignupField({
       email: '',
       password: '',
+      rPassword: '',
       nickname: '',
     });
 
@@ -74,35 +99,45 @@ function Signup() {
   return (
     <SignupPage>
       <DuoTitle>D?o</DuoTitle>
-      <Box width="420px" height="240px">
-        <div>email</div>
-        <input
+      <Container>
+        <Input
+          autoComplete="off"
           name="email"
-          placeholder="email"
+          placeholder="E-mail"
           value={email}
           onChange={changeState}
         />
 
-        <div>nickname</div>
-        <input
+        <Input
+          autoComplete="off"
           name="nickname"
-          placeholder="nickname"
+          placeholder="Nickname"
           value={nickname}
           onChange={changeState}
         />
 
-        <div>password</div>
-        <input
+        <Input
           name="password"
-          placeholder="password"
+          placeholder="Password"
           type="password"
           value={password}
           onChange={changeState}
         />
-        <button ref={signupBtn} type="button" onClick={signup}>
-          회원가입하기
-        </button>
-      </Box>
+        <Input
+          name="rPassword"
+          placeholder="Reenter password"
+          type="password"
+          value={rPassword}
+          onChange={changeState}
+        />
+      </Container>
+      <LinkContainer>
+        <LoginLink to="/login">로그인</LoginLink>
+        <FindLink to="/find">아이디 / 비밀번호 찾기</FindLink>
+      </LinkContainer>
+      <SignupBtn ref={signupBtn} type="button" onClick={signup}>
+        Signup !
+      </SignupBtn>
     </SignupPage>
   );
 }
