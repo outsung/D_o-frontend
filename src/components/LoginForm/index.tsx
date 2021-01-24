@@ -1,7 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-
-import { Input, InputName, LoginBtn, SignupLink } from './style';
-import Box from '../Box';
+import {
+  Container,
+  Input,
+  FindLink,
+  LinkContainer,
+  LoginBtn,
+  SignupLink,
+} from './style';
 
 import callCookie from '../../utils/cookie';
 import callApi from '../../utils/api';
@@ -77,29 +82,32 @@ const LoginForm = ({ width, height }: loginFormProps) => {
   }, []);
 
   return (
-    <Box width={width} height={height}>
-      <InputName>email</InputName>
-      <Input
-        name="email"
-        placeholder="email"
-        value={email}
-        onChange={changeState}
-      />
+    <>
+      <Container>
+        <Input
+          name="email"
+          placeholder="email"
+          value={email}
+          onChange={changeState}
+        />
 
-      <InputName>password</InputName>
-      <Input
-        name="password"
-        placeholder="password"
-        type="password"
-        value={password}
-        onChange={changeState}
-      />
+        <Input
+          name="password"
+          placeholder="password"
+          type="password"
+          value={password}
+          onChange={changeState}
+        />
+      </Container>
+      <LinkContainer>
+        <SignupLink to="/signup">회원가입</SignupLink>
+        <FindLink to="/find">아이디 / 비밀번호 찾기</FindLink>
+      </LinkContainer>
 
       <LoginBtn ref={loginBtnRef} type="button" onClick={login}>
-        로그인하기
+        Login !
       </LoginBtn>
-      <SignupLink to="/signup">회원가입</SignupLink>
-    </Box>
+    </>
   );
 };
 
