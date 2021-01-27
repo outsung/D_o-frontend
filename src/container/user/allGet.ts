@@ -8,7 +8,6 @@ export type usersType = {
   createdAt: string,
   updatedAt: string,
   __v: number,
-  online: boolean
 }
 
 export const allget = function(){

@@ -5,6 +5,8 @@ import { softShadows } from '@react-three/drei';
 import { Physics } from '@react-three/cannon';
 import socketio from 'socket.io-client';
 
+import callCookie from '../../utils/cookie';
+
 import { PhyPlane, PhyBox } from '../../components/Phy';
 
 // import Controls from '../../utils/Controls';
@@ -31,10 +33,11 @@ function getRandomArbitrary(min: number, max: number) {
 
 softShadows({});
 
-const socket = socketio.connect('https://duo-serverrr.herokuapp.com');
+const serverUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const Studio = () => {
   const [users, setUsers] = useState<[usersType]>();
+  const [onlineUsersIdx, setOnlineUsersIdx] = useState<string[]>();
 
   const init = async function () {
     setUsers(await allget());
@@ -45,13 +48,17 @@ const Studio = () => {
   }, []);
 
   useEffect(() => {
-    socket.on('online', (onlineString: string) => {
-      const array = JSON.parse(onlineString);
-      alert(array);
+    const socket = socketio.connect(
+      `${serverUrl}?auth=${callCookie.get('jwt')}`,
+    );
+
+    socket.emit('login');
+    socket.on('online', (onlineString: string[]) => {
+      setOnlineUsersIdx(onlineString);
     });
 
     return function () {
-      socket.close();
+      socket.disconnect();
     };
   }, []);
 
@@ -94,7 +101,7 @@ const Studio = () => {
                 <PhyBox
                   key={`k${user.id}`}
                   email={user.id}
-                  color="#575757"
+                  color={onlineUsersIdx?.includes(user._id) ? 'red' : '#575757'}
                   rotation={[
                     getRandomArbitrary(0, Math.PI),
                     getRandomArbitrary(0, Math.PI),
