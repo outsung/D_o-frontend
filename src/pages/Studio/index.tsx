@@ -3,6 +3,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 import { Canvas } from 'react-three-fiber';
 import { softShadows } from '@react-three/drei';
 import { Physics } from '@react-three/cannon';
+import socketio from 'socket.io-client';
 
 import { PhyPlane, PhyBox } from '../../components/Phy';
 
@@ -30,8 +31,10 @@ function getRandomArbitrary(min: number, max: number) {
 
 softShadows({});
 
+const socket = socketio.connect('https://duo-serverrr.herokuapp.com');
+
 const Studio = () => {
-  const [users, setUsers] = useState<usersType>();
+  const [users, setUsers] = useState<[usersType]>();
 
   const init = async function () {
     setUsers(await allget());
@@ -39,6 +42,17 @@ const Studio = () => {
 
   useEffect(() => {
     init();
+  }, []);
+
+  useEffect(() => {
+    socket.on('online', (onlineString: string) => {
+      const array = JSON.parse(onlineString);
+      console.log(array);
+    });
+
+    return function () {
+      socket.close();
+    };
   }, []);
 
   return (
