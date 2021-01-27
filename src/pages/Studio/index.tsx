@@ -33,7 +33,8 @@ function getRandomArbitrary(min: number, max: number) {
 
 softShadows({});
 
-const serverUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const serverUrl =
+  'https://duo-serverrr.herokuapp.com' || 'http://localhost:5000';
 
 const Studio = () => {
   const [users, setUsers] = useState<[usersType]>();
