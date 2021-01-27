@@ -1,25 +1,25 @@
 {
   "files": {
     "main.css": "/Duo-frontend/static/css/main.7bb05dfd.chunk.css",
-    "main.js": "/Duo-frontend/static/js/main.cf820862.chunk.js",
-    "main.js.map": "/Duo-frontend/static/js/main.cf820862.chunk.js.map",
-    "runtime-main.js": "/Duo-frontend/static/js/runtime-main.4e5a683d.js",
-    "runtime-main.js.map": "/Duo-frontend/static/js/runtime-main.4e5a683d.js.map",
-    "static/js/2.b61b9ede.chunk.js": "/Duo-frontend/static/js/2.b61b9ede.chunk.js",
-    "static/js/2.b61b9ede.chunk.js.map": "/Duo-frontend/static/js/2.b61b9ede.chunk.js.map",
-    "static/js/3.471a99eb.chunk.js": "/Duo-frontend/static/js/3.471a99eb.chunk.js",
-    "static/js/3.471a99eb.chunk.js.map": "/Duo-frontend/static/js/3.471a99eb.chunk.js.map",
-    "static/js/4.3dd4536d.chunk.js": "/Duo-frontend/static/js/4.3dd4536d.chunk.js",
-    "static/js/4.3dd4536d.chunk.js.map": "/Duo-frontend/static/js/4.3dd4536d.chunk.js.map",
+    "main.js": "/Duo-frontend/static/js/main.65400fd5.chunk.js",
+    "main.js.map": "/Duo-frontend/static/js/main.65400fd5.chunk.js.map",
+    "runtime-main.js": "/Duo-frontend/static/js/runtime-main.90eb374b.js",
+    "runtime-main.js.map": "/Duo-frontend/static/js/runtime-main.90eb374b.js.map",
+    "static/js/2.9021fba3.chunk.js": "/Duo-frontend/static/js/2.9021fba3.chunk.js",
+    "static/js/2.9021fba3.chunk.js.map": "/Duo-frontend/static/js/2.9021fba3.chunk.js.map",
+    "static/js/3.f6018a81.chunk.js": "/Duo-frontend/static/js/3.f6018a81.chunk.js",
+    "static/js/3.f6018a81.chunk.js.map": "/Duo-frontend/static/js/3.f6018a81.chunk.js.map",
+    "static/js/4.cff6b574.chunk.js": "/Duo-frontend/static/js/4.cff6b574.chunk.js",
+    "static/js/4.cff6b574.chunk.js.map": "/Duo-frontend/static/js/4.cff6b574.chunk.js.map",
     "index.html": "/Duo-frontend/index.html",
     "static/css/main.7bb05dfd.chunk.css.map": "/Duo-frontend/static/css/main.7bb05dfd.chunk.css.map",
-    "static/js/2.b61b9ede.chunk.js.LICENSE.txt": "/Duo-frontend/static/js/2.b61b9ede.chunk.js.LICENSE.txt",
+    "static/js/2.9021fba3.chunk.js.LICENSE.txt": "/Duo-frontend/static/js/2.9021fba3.chunk.js.LICENSE.txt",
     "static/media/background.e0cc6fb1.png": "/Duo-frontend/static/media/background.e0cc6fb1.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.4e5a683d.js",
-    "static/js/2.b61b9ede.chunk.js",
+    "static/js/runtime-main.90eb374b.js",
+    "static/js/2.9021fba3.chunk.js",
     "static/css/main.7bb05dfd.chunk.css",
-    "static/js/main.cf820862.chunk.js"
+    "static/js/main.65400fd5.chunk.js"
   ]
 }
