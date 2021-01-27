@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+  Container,
+  Input,
+  FindLink,
+  LinkContainer,
+  LoginBtn,
+  SignupLink,
+} from './style';
 
-import Box from '../Box';
+import Illusion from '../../utils/Illusion';
 
 import callCookie from '../../utils/cookie';
 import callApi from '../../utils/api';
 import history from '../../utils/browserHistory';
-
-type loginFormProps = {
-  width: string;
-  height: string;
-};
 
 type loginReq = {
   id: string;
@@ -23,13 +26,21 @@ type loginRes = {
   tokenType: string;
 };
 
-const LoginForm = ({ width, height }: loginFormProps) => {
+interface loginFormProps {
+  onTyping: (name: string, char: string) => void;
+}
+
+const LoginForm = ({ onTyping }: loginFormProps) => {
+  const onKeypress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    onTyping(e.currentTarget.name, e.key);
+  };
+
   const [loginField, setLoginField] = useState({
-    phoneNumber: '',
+    email: '',
     password: '',
   });
 
-  const { phoneNumber, password } = loginField;
+  const { email, password } = loginField;
 
   const changeState = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -40,49 +51,85 @@ const LoginForm = ({ width, height }: loginFormProps) => {
     });
   };
 
-  const login = async () => {
-    callCookie.delete('jwt');
+  const login = async function (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) {
+    const target = e.currentTarget;
+    target.disabled = true;
+    target.classList.add('on');
 
     const res = await callApi.post<loginReq, loginRes>('users/login', {
-      id: phoneNumber,
+      id: email,
       password,
     });
 
-    if (res?.result === -1) return; // alert('회원이 아닌 핸드폰 번호이거나, 비밀번호가 틀렸습니다.');
+    if (res?.result === -1) {
+      setLoginField({
+        email: '',
+        password: '',
+      });
+
+      alert('회원이 아닌 핸드폰 번호이거나, 비밀번호가 틀렸습니다.');
+      target.disabled = false;
+      target.classList.remove('on');
+
+      return;
+    }
 
     const token = `${res?.tokenType} ${res?.accessToken}`;
     callCookie.set('jwt', token, 2);
 
     setLoginField({
-      phoneNumber: '',
+      email: '',
       password: '',
     });
 
     history.push('/main');
   };
 
-  return (
-    <Box width={width} height={height}>
-      <div>phoneNumber</div>
-      <input
-        name="phoneNumber"
-        placeholder="phoneNumber"
-        value={phoneNumber}
-        onChange={changeState}
-      />
+  useEffect(() => {
+    callCookie.delete('jwt');
+  }, []);
 
-      <div>password</div>
-      <input
-        name="password"
-        placeholder="password"
-        type="password"
-        value={password}
-        onChange={changeState}
-      />
-      <button type="button" onClick={login}>
-        자자 들가자~
-      </button>
-    </Box>
+  return (
+    <>
+      <Container>
+        <Illusion>
+          <Input
+            autoComplete="off"
+            name="email"
+            placeholder="E-mail"
+            value={email}
+            onKeyPress={onKeypress}
+            onChange={changeState}
+          />
+        </Illusion>
+        <Illusion>
+          <Input
+            name="password"
+            placeholder="Password"
+            type="password"
+            value={password}
+            onKeyPress={onKeypress}
+            onChange={changeState}
+          />
+        </Illusion>
+      </Container>
+      <LinkContainer>
+        <Illusion>
+          <SignupLink to="/signup">회원가입</SignupLink>
+        </Illusion>
+        <Illusion>
+          <FindLink to="/find">아이디 / 비밀번호 찾기</FindLink>
+        </Illusion>
+      </LinkContainer>
+
+      <Illusion>
+        <LoginBtn type="button" onClick={login}>
+          Login !
+        </LoginBtn>
+      </Illusion>
+    </>
   );
 };
 

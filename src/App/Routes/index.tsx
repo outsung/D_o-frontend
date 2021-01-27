@@ -1,10 +1,11 @@
 import React from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
 
-// import AuthRoute from './AuthRoute';
+import AuthRoute from './AuthRoute';
 import history from '../../utils/browserHistory';
 
-import Login from '../../pages/Login/index';
+import Signup from '../../pages/Signup';
+import Login from '../../pages/Login';
 import Empty from '../../pages/Enpty';
 
 import Studio from '../../pages/Studio';
@@ -14,9 +15,10 @@ const Routes = () => (
     <Switch>
       <Route exact path="/" component={Login} />
       <Route exact path="/login" component={Login} />
+      <Route exact path="/signup" component={Signup} />
 
-      {/* <AuthRoute exact path="/main" component={Main} /> */}
-      <Route exact path="/main" component={Studio} />
+      {/* <Route exact path="/main" component={Studio} /> */}
+      <AuthRoute exact path="/main" component={Studio} />
 
       <Route component={Empty} />
     </Switch>

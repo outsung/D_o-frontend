@@ -1,40 +1,69 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 // import * as THREE from 'three';
 import { Canvas } from 'react-three-fiber';
 import { softShadows } from '@react-three/drei';
 import { Physics } from '@react-three/cannon';
+import socketio from 'socket.io-client';
 
-import { PhyPlane, PhyBox } from '../../components/Phy';
+import callCookie from '../../utils/cookie';
+
+import { PhyPlane, PhyBoxInfo, PhyString } from '../../components/Phy';
 
 // import Controls from '../../utils/Controls';
 import Loader from '../../components/Loader';
 
 import { StudioPage, WaitingBnt } from './style';
 
-import TextGeometry from '../../components/TextGeometry';
+// @api
+import { allget, usersType } from '../../container/user/allGet';
 
 function getRandomArbitrary(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
-function getRandomInt(min: number, max: number) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min; // 최댓값은 제외, 최솟값은 포함
-}
 
-const BOX_COLOR = ['#A6586D', '#394873', '#F27272', '#F2A663', '#F28B66'];
+// function getRandomInt(min: number, max: number) {
+//   min = Math.ceil(min);
+//   max = Math.floor(max);
+//   return Math.floor(Math.random() * (max - min)) + min; // 최댓값은 제외, 최솟값은 포함
+// }
+
+// const BOX_COLOR = ['#A6586D', '#394873', '#F27272', '#F2A663', '#F28B66'];
 
 softShadows({});
 
+const serverUrl =
+  'https://duo-serverrr.herokuapp.com' || 'http://localhost:5000';
+
 const Studio = () => {
-  const [waiting, setWaiting] = useState([{ color: 1 }]);
-  const addWaiting = () => {
-    setWaiting([...waiting, { color: getRandomInt(0, 5) }]);
+  const [users, setUsers] = useState<[usersType]>();
+  const [onlineUsersIdx, setOnlineUsersIdx] = useState<string[]>();
+
+  const init = async function () {
+    setUsers(await allget());
   };
+
+  useEffect(() => {
+    init();
+  }, []);
+
+  useEffect(() => {
+    const socket = socketio.connect(
+      `${serverUrl}?auth=${callCookie.get('jwt')}`,
+    );
+
+    socket.emit('login');
+    socket.on('online', (onlineString: string[]) => {
+      setOnlineUsersIdx(onlineString);
+    });
+
+    return function () {
+      socket.disconnect();
+    };
+  }, []);
 
   return (
     <StudioPage>
-      <WaitingBnt onClick={addWaiting}>start Matching</WaitingBnt>
+      <WaitingBnt>Next +4</WaitingBnt>
       <Canvas
         colorManagement
         shadowMap
@@ -47,7 +76,7 @@ const Studio = () => {
         <directionalLight
           castShadow
           position={[2.5, 8, 5]}
-          intensity={1.5}
+          intensity={1}
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
           shadow-camera-far={50}
@@ -62,32 +91,55 @@ const Studio = () => {
         <Suspense fallback={<Loader />}>
           {/* cannon */}
           <Physics gravity={[0, -10, 0]}>
-            <PhyPlane position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]} />
-            <PhyPlane position={[0, 0, -5]} />
-            <PhyPlane position={[8, 0, 0]} rotation={[0, -Math.PI / 2, 0]} />
-            {waiting.map(({ color }) => (
-              <PhyBox
-                color={BOX_COLOR[color]}
-                rotation={[
-                  getRandomArbitrary(0, Math.PI),
-                  getRandomArbitrary(0, Math.PI),
-                  getRandomArbitrary(0, Math.PI),
-                ]}
-                position={[
-                  getRandomArbitrary(-1, 1),
-                  4,
-                  getRandomArbitrary(2, 4),
-                ]}
-              />
-            ))}
-            <TextGeometry
-              receiveShadow
-              castShadow
-              position={[-3.1, 0, 0]}
-              text="D?o"
+            <PhyPlane
+              position={[0, -0.1, 0]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              meshProps={{ visible: false }}
+            />
+            <PhyPlane position={[0, 0, -5]} meshProps={{ visible: false }} />
+            <PhyPlane
+              position={[8, 0, 0]}
+              rotation={[0, -Math.PI / 2, 0]}
+              meshProps={{ visible: false }}
+            />
+
+            {users ? (
+              users.map((user) => (
+                <PhyBoxInfo
+                  key={`k${user.id}`}
+                  info={user.id}
+                  color={onlineUsersIdx?.includes(user._id) ? 'red' : '#575757'}
+                  rotation={[
+                    getRandomArbitrary(0, Math.PI),
+                    getRandomArbitrary(0, Math.PI),
+                    getRandomArbitrary(0, Math.PI),
+                  ]}
+                  position={[
+                    getRandomArbitrary(-3, 3),
+                    4,
+                    getRandomArbitrary(1, 2),
+                  ]}
+                  args={[0.5, 0.5, 0.5]}
+                  meshProps={{
+                    scale: [0.5, 0.5, 0.5],
+                    castShadow: true,
+                    receiveShadow: true,
+                  }}
+                />
+              ))
+            ) : (
+              <></>
+            )}
+
+            <PhyString
+              color="#F28B66"
+              position={[0, 1.35, 0]}
+              string="D?o"
               size={3}
               height={0.5}
-              color="#F28B66"
+              wordSpacing={-1}
+              type="Static"
+              meshProps={{ receiveShadow: true, castShadow: true }}
             />
           </Physics>
 

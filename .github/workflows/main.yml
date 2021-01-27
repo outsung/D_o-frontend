@@ -33,6 +33,7 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
 
       - name: C) Setup assets
         run: mkdir -p ./deploy
