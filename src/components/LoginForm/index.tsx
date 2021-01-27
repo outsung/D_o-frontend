@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Container,
   Input,
@@ -8,14 +8,11 @@ import {
   SignupLink,
 } from './style';
 
+import Illusion from '../../utils/Illusion';
+
 import callCookie from '../../utils/cookie';
 import callApi from '../../utils/api';
 import history from '../../utils/browserHistory';
-
-// type loginFormProps = {
-//   width: string;
-//   height: string;
-// };
 
 type loginReq = {
   id: string;
@@ -29,13 +26,19 @@ type loginRes = {
   tokenType: string;
 };
 
-// const LoginForm = ({ width, height }: loginFormProps) => {
-const LoginForm = () => {
+interface loginFormProps {
+  onTyping: (name: string, char: string) => void;
+}
+
+const LoginForm = ({ onTyping }: loginFormProps) => {
+  const onKeypress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    onTyping(e.currentTarget.name, e.key);
+  };
+
   const [loginField, setLoginField] = useState({
     email: '',
     password: '',
   });
-  const loginBtnRef = useRef({} as HTMLButtonElement);
 
   const { email, password } = loginField;
 
@@ -48,9 +51,12 @@ const LoginForm = () => {
     });
   };
 
-  const login = async function () {
-    loginBtnRef.current.disabled = true;
-    loginBtnRef.current.classList.add('on');
+  const login = async function (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) {
+    const target = e.currentTarget;
+    target.disabled = true;
+    target.classList.add('on');
 
     const res = await callApi.post<loginReq, loginRes>('users/login', {
       id: email,
@@ -64,8 +70,8 @@ const LoginForm = () => {
       });
 
       alert('회원이 아닌 핸드폰 번호이거나, 비밀번호가 틀렸습니다.');
-      loginBtnRef.current.disabled = false;
-      loginBtnRef.current.classList.remove('on');
+      target.disabled = false;
+      target.classList.remove('on');
 
       return;
     }
@@ -88,30 +94,41 @@ const LoginForm = () => {
   return (
     <>
       <Container>
-        <Input
-          autoComplete="off"
-          name="email"
-          placeholder="E-mail"
-          value={email}
-          onChange={changeState}
-        />
-
-        <Input
-          name="password"
-          placeholder="Password"
-          type="password"
-          value={password}
-          onChange={changeState}
-        />
+        <Illusion>
+          <Input
+            autoComplete="off"
+            name="email"
+            placeholder="E-mail"
+            value={email}
+            onKeyPress={onKeypress}
+            onChange={changeState}
+          />
+        </Illusion>
+        <Illusion>
+          <Input
+            name="password"
+            placeholder="Password"
+            type="password"
+            value={password}
+            onKeyPress={onKeypress}
+            onChange={changeState}
+          />
+        </Illusion>
       </Container>
       <LinkContainer>
-        <SignupLink to="/signup">회원가입</SignupLink>
-        <FindLink to="/find">아이디 / 비밀번호 찾기</FindLink>
+        <Illusion>
+          <SignupLink to="/signup">회원가입</SignupLink>
+        </Illusion>
+        <Illusion>
+          <FindLink to="/find">아이디 / 비밀번호 찾기</FindLink>
+        </Illusion>
       </LinkContainer>
 
-      <LoginBtn ref={loginBtnRef} type="button" onClick={login}>
-        Login !
-      </LoginBtn>
+      <Illusion>
+        <LoginBtn type="button" onClick={login}>
+          Login !
+        </LoginBtn>
+      </Illusion>
     </>
   );
 };

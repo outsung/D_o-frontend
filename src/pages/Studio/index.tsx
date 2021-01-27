@@ -7,14 +7,12 @@ import socketio from 'socket.io-client';
 
 import callCookie from '../../utils/cookie';
 
-import { PhyPlane, PhyBox } from '../../components/Phy';
+import { PhyPlane, PhyBoxInfo, PhyString } from '../../components/Phy';
 
 // import Controls from '../../utils/Controls';
 import Loader from '../../components/Loader';
 
 import { StudioPage, WaitingBnt } from './style';
-
-import TextGeometry from '../../components/TextGeometry';
 
 // @api
 import { allget, usersType } from '../../container/user/allGet';
@@ -78,7 +76,7 @@ const Studio = () => {
         <directionalLight
           castShadow
           position={[2.5, 8, 5]}
-          intensity={1.5}
+          intensity={1}
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
           shadow-camera-far={50}
@@ -93,15 +91,23 @@ const Studio = () => {
         <Suspense fallback={<Loader />}>
           {/* cannon */}
           <Physics gravity={[0, -10, 0]}>
-            <PhyPlane position={[0, -0.1, 0]} rotation={[-Math.PI / 2, 0, 0]} />
-            <PhyPlane position={[0, 0, -5]} />
-            <PhyPlane position={[8, 0, 0]} rotation={[0, -Math.PI / 2, 0]} />
+            <PhyPlane
+              position={[0, -0.1, 0]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              meshProps={{ visible: false }}
+            />
+            <PhyPlane position={[0, 0, -5]} meshProps={{ visible: false }} />
+            <PhyPlane
+              position={[8, 0, 0]}
+              rotation={[0, -Math.PI / 2, 0]}
+              meshProps={{ visible: false }}
+            />
 
             {users ? (
               users.map((user) => (
-                <PhyBox
+                <PhyBoxInfo
                   key={`k${user.id}`}
-                  email={user.id}
+                  info={user.id}
                   color={onlineUsersIdx?.includes(user._id) ? 'red' : '#575757'}
                   rotation={[
                     getRandomArbitrary(0, Math.PI),
@@ -109,24 +115,31 @@ const Studio = () => {
                     getRandomArbitrary(0, Math.PI),
                   ]}
                   position={[
-                    getRandomArbitrary(-1, 1),
+                    getRandomArbitrary(-3, 3),
                     4,
-                    getRandomArbitrary(2, 4),
+                    getRandomArbitrary(1, 2),
                   ]}
+                  args={[0.5, 0.5, 0.5]}
+                  meshProps={{
+                    scale: [0.5, 0.5, 0.5],
+                    castShadow: true,
+                    receiveShadow: true,
+                  }}
                 />
               ))
             ) : (
               <></>
             )}
 
-            <TextGeometry
-              receiveShadow
-              castShadow
-              position={[-3.1, 0, 0]}
-              text="D?o"
+            <PhyString
+              color="#F28B66"
+              position={[0, 1.35, 0]}
+              string="D?o"
               size={3}
               height={0.5}
-              color="#F28B66"
+              wordSpacing={-1}
+              type="Static"
+              meshProps={{ receiveShadow: true, castShadow: true }}
             />
           </Physics>
 
