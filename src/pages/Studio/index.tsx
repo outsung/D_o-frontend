@@ -47,7 +47,7 @@ const Studio = () => {
   useEffect(() => {
     socket.on('online', (onlineString: string) => {
       const array = JSON.parse(onlineString);
-      console.log(array);
+      alert(array);
     });
 
     return function () {
