@@ -15,7 +15,7 @@ import Loader from '../../components/Loader';
 import { StudioPage, WaitingBnt } from './style';
 
 // @api
-import { allget, usersType } from '../../container/user/allGet';
+import { allget, allgetRes } from '../../container/users';
 
 function getRandomArbitrary(min: number, max: number) {
   return Math.random() * (max - min) + min;
@@ -35,7 +35,7 @@ const serverUrl =
   'https://duo-serverrr.herokuapp.com' || 'http://localhost:5000';
 
 const Studio = () => {
-  const [users, setUsers] = useState<[usersType]>();
+  const [users, setUsers] = useState<[allgetRes]>();
   const [onlineUsersIdx, setOnlineUsersIdx] = useState<string[]>();
 
   const init = async function () {

@@ -5,7 +5,7 @@ import { Physics } from '@react-three/cannon';
 // import { HTML } from '@react-three/drei';
 
 import { LoginPage, ForwardPage, DuoTitle } from './style';
-import LoginForm from '../../components/LoginForm';
+import LoginForm from './LoginForm';
 
 import {
   PhyPlane,

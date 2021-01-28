@@ -8,23 +8,12 @@ import {
   SignupLink,
 } from './style';
 
-import Illusion from '../../utils/Illusion';
+import Illusion from '../../../utils/Illusion';
 
-import callCookie from '../../utils/cookie';
-import callApi from '../../utils/api';
-import history from '../../utils/browserHistory';
+import { login } from '../../../container/users';
 
-type loginReq = {
-  id: string;
-  password: String;
-};
-type loginRes = {
-  result: 1 | -1;
-  idx: string;
-  id: string;
-  accessToken: string;
-  tokenType: string;
-};
+import callCookie from '../../../utils/cookie';
+import history from '../../../utils/browserHistory';
 
 interface loginFormProps {
   onTyping: (name: string, char: string) => void;
@@ -51,17 +40,14 @@ const LoginForm = ({ onTyping }: loginFormProps) => {
     });
   };
 
-  const login = async function (
+  const onClickLoginBtn = async function (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) {
     const target = e.currentTarget;
     target.disabled = true;
     target.classList.add('on');
 
-    const res = await callApi.post<loginReq, loginRes>('users/login', {
-      id: email,
-      password,
-    });
+    const res = await login({ id: email, password });
 
     if (res?.result === -1) {
       setLoginField({
@@ -69,15 +55,12 @@ const LoginForm = ({ onTyping }: loginFormProps) => {
         password: '',
       });
 
-      alert('회원이 아닌 핸드폰 번호이거나, 비밀번호가 틀렸습니다.');
+      alert('회원이 아닌 이메일이거나, 비밀번호가 틀렸습니다.');
       target.disabled = false;
       target.classList.remove('on');
 
       return;
     }
-
-    const token = `${res?.tokenType} ${res?.accessToken}`;
-    callCookie.set('jwt', token, 2);
 
     setLoginField({
       email: '',
@@ -125,7 +108,7 @@ const LoginForm = ({ onTyping }: loginFormProps) => {
       </LinkContainer>
 
       <Illusion>
-        <LoginBtn type="button" onClick={login}>
+        <LoginBtn type="button" onClick={onClickLoginBtn}>
           Login !
         </LoginBtn>
       </Illusion>
