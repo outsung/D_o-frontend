@@ -10,6 +10,8 @@ import Empty from '../../pages/Enpty';
 
 import Studio from '../../pages/Studio';
 
+import Users from '../../pages/Users';
+
 const Routes = () => (
   <Router history={history}>
     <Switch>
@@ -19,6 +21,8 @@ const Routes = () => (
 
       {/* <Route exact path="/main" component={Studio} /> */}
       <AuthRoute exact path="/main" component={Studio} />
+
+      <AuthRoute path="/users/:_id" component={Users} />
 
       <Route component={Empty} />
     </Switch>

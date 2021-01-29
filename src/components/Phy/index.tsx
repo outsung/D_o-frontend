@@ -56,16 +56,18 @@ PhyBox.defaultProps = { meshProps: undefined };
 /* BoxInfo */
 export interface phyBoxInfoProps extends BoxProps {
   color: string;
-  info: string;
+  children: React.ReactNode;
   meshProps?: MeshProps;
 }
 export function PhyBoxInfo({
   color,
-  info,
+  children,
   meshProps,
   ...props
 }: phyBoxInfoProps) {
   const [hovered, setHover] = useState(false);
+  const [hoveredHTML, setHoveredHTML] = useState(false);
+
   const [ref, api] = useBox(() => ({
     mass: 1,
     ...props,
@@ -76,7 +78,7 @@ export function PhyBoxInfo({
     <mesh
       {...meshProps}
       scale={
-        hovered
+        hovered || hoveredHTML
           ? [args[0] + 0.05, args[1] + 0.05, args[2] + 0.05]
           : [args[0], args[0], args[0]]
       }
@@ -87,11 +89,13 @@ export function PhyBoxInfo({
     >
       <boxBufferGeometry />
       <meshStandardMaterial color={color} />
-      <HTML
-        scaleFactor={10}
-        style={{ pointerEvents: 'none', display: hovered ? 'block' : 'none' }}
-      >
-        <div className="content">info : {info}</div>
+      <HTML style={{ display: hovered || hoveredHTML ? 'block' : 'none' }}>
+        <div
+          onPointerEnter={() => setHoveredHTML(true)}
+          onPointerLeave={() => setHoveredHTML(false)}
+        >
+          {children}
+        </div>
       </HTML>
     </mesh>
   );

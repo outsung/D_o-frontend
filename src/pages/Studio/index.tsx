@@ -12,6 +12,8 @@ import { PhyPlane, PhyBoxInfo, PhyString } from '../../components/Phy';
 // import Controls from '../../utils/Controls';
 import Loader from '../../components/Loader';
 
+import UserProfile from '../../components/UserProfile';
+
 import { StudioPage, WaitingBnt } from './style';
 
 // @api
@@ -107,7 +109,6 @@ const Studio = () => {
               users.map((user) => (
                 <PhyBoxInfo
                   key={`k${user.id}`}
-                  info={user.id}
                   color={onlineUsersIdx?.includes(user._id) ? 'red' : '#575757'}
                   rotation={[
                     getRandomArbitrary(0, Math.PI),
@@ -125,7 +126,13 @@ const Studio = () => {
                     castShadow: true,
                     receiveShadow: true,
                   }}
-                />
+                >
+                  <UserProfile
+                    _id={user._id}
+                    id={user.id}
+                    nickname={user.nickname}
+                  />
+                </PhyBoxInfo>
               ))
             ) : (
               <></>
