@@ -11,17 +11,17 @@ const TypingEffect = ({ check }: typingEffectProps) => {
   const ref = useRef({} as HTMLHeadingElement);
   const handleRef = useRef({} as NodeJS.Timeout);
 
-  const texts = ['...확인..', '되셨습니다..'];
-  const between = '.';
-  const speed = 500;
-
-  console.log('TypingEffect : ', check);
+  // console.log('TypingEffect : ', check);
 
   useEffect(() => {
+    const texts = ['...확인..', '되셨습니다..'];
+    const between = '.';
+    const speed = 800;
+
     clearTimeout(handleRef.current);
 
     const typeWriter = () => {
-      console.log(`time: ${time.current}, check: ${check}`);
+      // console.log(`time: ${time.current}, check: ${check}`);
 
       let step = -1;
       if (texts[0].length > time.current) step = 0;
@@ -44,7 +44,7 @@ const TypingEffect = ({ check }: typingEffectProps) => {
         default:
       }
 
-      console.log(`step: ${step}, char: ${char}`);
+      // console.log(`step: ${step}, char: ${char}`);
 
       ref.current.innerHTML += char;
       handleRef.current = setTimeout(typeWriter, speed);
