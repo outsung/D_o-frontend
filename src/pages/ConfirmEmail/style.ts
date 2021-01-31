@@ -40,3 +40,18 @@ export const SlothVideo = styled.video`
 
   height: calc(100vh + 36%);
 `;
+
+export const Btn = styled.div`
+  color: #fff;
+  font-size: 20px;
+  
+  height: 40px;
+
+  transition: all 0.2s;
+
+  cursor: pointer;
+  
+  &:hover{
+    font-size: 22px;
+  } 
+`;

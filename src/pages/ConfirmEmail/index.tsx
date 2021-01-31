@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Link, useParams } from 'react-router-dom';
-
-import { ConfirmEmailPage, ContentsBox, Filter, SlothVideo } from './style';
+import { useParams } from 'react-router-dom';
+import history from '../../utils/browserHistory';
+import {
+  ConfirmEmailPage,
+  ContentsBox,
+  Filter,
+  SlothVideo,
+  Btn,
+} from './style';
 
 import { confirmEmail } from '../../container/users';
 
@@ -106,16 +112,7 @@ const ConfirmEmail = () => {
             }}
           />
           {btnVisible ? (
-            <Link
-              style={{
-                textDecoration: 'none',
-                color: '#fff',
-                fontSize: '20px',
-              }}
-              to="/"
-            >
-              로그인하러 가기
-            </Link>
+            <Btn onClick={() => history.replace('/')}>로그인하러 가기</Btn>
           ) : (
             <></>
           )}
