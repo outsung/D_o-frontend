@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { confirmEmail } from '../../container/users';
 
 interface typingEffectProps {
   check: boolean;
+  callback: () => void;
 }
-const TypingEffect = ({ check }: typingEffectProps) => {
+const TypingEffect = ({ check, callback }: typingEffectProps) => {
   const time = useRef(0);
   const ref = useRef({} as HTMLHeadingElement);
   const handleRef = useRef({} as NodeJS.Timeout);
@@ -47,21 +48,22 @@ const TypingEffect = ({ check }: typingEffectProps) => {
       // console.log(`step: ${step}, char: ${char}`);
 
       ref.current.innerHTML += char;
-      handleRef.current = setTimeout(typeWriter, speed);
+      if (time.current <= texts[0].length + texts[1].length)
+        handleRef.current = setTimeout(typeWriter, speed);
+      else callback();
     };
     typeWriter();
-  }, [check]);
+  }, [check, callback]);
 
   return (
-    <>
-      <h1 ref={ref} style={{ fontSize: 100, color: '#FFFFFF' }}>
-        {}
-      </h1>
-    </>
+    <h1 ref={ref} style={{ fontSize: 100, color: '#FFFFFF' }}>
+      {/* TypingEffect Text */}
+    </h1>
   );
 };
 
 const ConfirmEmail = () => {
+  const [btnVisible, setBtnVisible] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
   const { key } = useParams<{ key: string }>();
 
@@ -88,11 +90,31 @@ const ConfirmEmail = () => {
             height: '100vh',
             zIndex: 1000,
             display: 'flex',
+            flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
           }}
         >
-          <TypingEffect check={emailVerified} />
+          <TypingEffect
+            check={emailVerified}
+            callback={() => {
+              setBtnVisible(true);
+            }}
+          />
+          {btnVisible ? (
+            <Link
+              style={{
+                textDecoration: 'none',
+                color: '#fff',
+                fontSize: '20px',
+              }}
+              to="/"
+            >
+              로그인하러 가기
+            </Link>
+          ) : (
+            <></>
+          )}
         </div>
         <video
           style={{
