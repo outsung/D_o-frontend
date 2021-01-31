@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
+import { ConfirmEmailPage, ContentsBox, Filter, SlothVideo } from './style';
+
 import { confirmEmail } from '../../container/users';
 
 interface typingEffectProps {
@@ -62,6 +64,19 @@ const TypingEffect = ({ check, callback }: typingEffectProps) => {
   );
 };
 
+const BackgroundGif = () => (
+  <SlothVideo loop autoPlay muted>
+    <source
+      src="https://thumbs.gfycat.com/AdventurousPointlessGull-mobile.webm"
+      type="video/webm"
+    />
+    <source
+      src="https://thumbs.gfycat.com/AdventurousPointlessGull-mobile.mp4"
+      type="video/mp4"
+    />
+  </SlothVideo>
+);
+
 const ConfirmEmail = () => {
   const [btnVisible, setBtnVisible] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
@@ -82,19 +97,8 @@ const ConfirmEmail = () => {
 
   return (
     <>
-      <div style={{ overflow: 'hidden', width: '100vw', height: '100vh' }}>
-        <div
-          style={{
-            position: 'absolute',
-            width: '100vw',
-            height: '100vh',
-            zIndex: 1000,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
+      <ConfirmEmailPage>
+        <ContentsBox>
           <TypingEffect
             check={emailVerified}
             callback={() => {
@@ -115,40 +119,12 @@ const ConfirmEmail = () => {
           ) : (
             <></>
           )}
-        </div>
-        <video
-          style={{
-            position: 'relative',
-            height: 'calc(100vh + 36%)',
-            top: '-18%',
-          }}
-          loop
-          autoPlay
-          muted
-        >
-          <source
-            id="webmSource"
-            src="https://thumbs.gfycat.com/AdventurousPointlessGull-mobile.webm"
-            type="video/webm"
-          />
-          <source
-            id="mp4Source"
-            src="https://thumbs.gfycat.com/AdventurousPointlessGull-mobile.mp4"
-            type="video/mp4"
-          />
-        </video>
-        <div
-          style={{
-            backgroundColor: 'rgba(0,0,0,0.7)',
-            width: '100vw',
-            height: '100vh',
-            position: 'absolute',
-            top: '0',
-            left: '0',
-            zIndex: 100,
-          }}
-        />
-      </div>
+        </ContentsBox>
+
+        <BackgroundGif />
+
+        <Filter opacity={btnVisible ? 0.8 : 0.7} />
+      </ConfirmEmailPage>
     </>
   );
 };
