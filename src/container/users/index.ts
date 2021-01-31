@@ -21,7 +21,20 @@ export const login = async function (req: loginReq) {
   return res;
 };
 
-export type signup = {};
+export type signupReq = {};
+export type signupRes = {};
+export const signup = function () {};
+
+export type confirmEmailRes = {
+  result: 1 | -1;
+  message: string;
+};
+export const confirmEmail = async function (key: string) {
+  const res = await callApi.get<{}, confirmEmailRes>(
+    `users/confirmEmail/${key}`,
+  );
+  return res;
+};
 
 export type allgetRes = {
   _id: string;
@@ -35,9 +48,9 @@ export const allget = function () {
 };
 
 export type getByIdxRes = {
-  result: 1 | -1,
-  idx: string,
-  id: string
+  result: 1 | -1;
+  idx: string;
+  id: string;
 };
 export const getByIdx = function (_id: string) {
   return callApi.get<{}, getByIdxRes>(`users/idx/${_id}`);

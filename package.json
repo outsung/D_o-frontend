@@ -5,6 +5,7 @@
   "private": true,
   "dependencies": {
     "@mediapipe/hands": "^0.1.1606863095",
+    "@react-spring/three": "^9.0.0-rc.3",
     "@react-three/cannon": "^0.5.3",
     "@react-three/drei": "^2.2.13",
     "@testing-library/jest-dom": "^5.11.6",
@@ -56,7 +57,7 @@
         }
       ],
       "react/no-array-index-key": 0,
-      "no-underscore-dangle" : 0,
+      "no-underscore-dangle": 0,
       "react/jsx-no-bind": 0,
       "no-alert": 0,
       "no-restricted-globals": 0,

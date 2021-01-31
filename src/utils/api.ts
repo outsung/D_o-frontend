@@ -55,7 +55,10 @@ const callApiBase = async function <I, O>(
   method: fetchMethod,
   body: I | undefined = undefined,
 ): Promise<O | undefined> {
-  const serverUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  
+  let serverUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+  if(url.indexOf("http://") !== -1 || url.indexOf("https://") !== -1) serverUrl = "";
 
   const response: Response = await callFetch<I>(
     `${serverUrl}${url}`,
