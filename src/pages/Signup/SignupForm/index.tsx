@@ -59,6 +59,15 @@ function SignupForm() {
       signupBtn.current.classList.remove('on');
       return;
     }
+    if (
+      !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
+        email,
+      )
+    ) {
+      alert('이메일 형식이 아닙니다.');
+      signupBtn.current.disabled = false;
+      signupBtn.current.classList.remove('on');
+    }
 
     const res = await callApi.post<signupReq, signupRes>('users/signup', {
       id: email,
