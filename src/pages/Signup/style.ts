@@ -10,13 +10,11 @@ export const SignupPage = styled.div`
   align-items: center;
 `;
 
-
 export const DuoTitle = styled.div`
   margin-bottom: 50px;
 
   font-size: 30vh;
   font-weight: bold;
 
-  color: #F2A663;
+  color: #f2a663;
 `;
-

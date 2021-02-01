@@ -11,6 +11,7 @@ import {
 import Illusion from '../../../utils/Illusion';
 
 import { login } from '../../../container/users';
+import { loginVerify } from '../../../container/users/verify';
 
 import callCookie from '../../../utils/cookie';
 import history from '../../../utils/browserHistory';
@@ -47,25 +48,26 @@ const LoginForm = ({ onTyping }: loginFormProps) => {
     target.disabled = true;
     target.classList.add('on');
 
-    const res = await login({ id: email, password });
-
-    if (res?.result === -1) {
-      setLoginField({
-        email: '',
-        password: '',
-      });
-
-      alert('회원이 아닌 이메일이거나, 비밀번호가 틀렸습니다.');
+    const verify = loginVerify({ id: email, password });
+    if (verify.result === -1) {
+      alert(verify.message);
       target.disabled = false;
       target.classList.remove('on');
-
       return;
     }
+    const res = await login({ id: email, password });
 
     setLoginField({
       email: '',
       password: '',
     });
+    target.disabled = false;
+    target.classList.remove('on');
+
+    if (res?.result === -1) {
+      alert('회원이 아닌 이메일이거나, 비밀번호가 틀렸습니다.');
+      return;
+    }
 
     history.push('/main');
   };
@@ -100,10 +102,14 @@ const LoginForm = ({ onTyping }: loginFormProps) => {
       </Container>
       <LinkContainer>
         <Illusion>
-          <SignupLink to="/signup">회원가입</SignupLink>
+          <SignupLink onClick={() => history.push('/signup')}>
+            회원가입
+          </SignupLink>
         </Illusion>
         <Illusion>
-          <FindLink to="/find">아이디 / 비밀번호 찾기</FindLink>
+          <FindLink onClick={() => history.push('/find')}>
+            아이디 / 비밀번호 찾기
+          </FindLink>
         </Illusion>
       </LinkContainer>
 

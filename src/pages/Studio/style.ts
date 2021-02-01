@@ -9,7 +9,6 @@ export const StudioPage = styled.div`
 
   overflow: hidden;
 `;
-
 export const WaitingBnt = styled.div`
   position: absolute;
 

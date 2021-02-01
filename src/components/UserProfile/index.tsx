@@ -1,4 +1,5 @@
 import React from 'react';
+import history from '../../utils/browserHistory';
 
 import {
   ProfileBox,
@@ -8,7 +9,8 @@ import {
   FieldBox,
   Field,
   FieldA,
-  Star,
+  FieldLink,
+  Btn,
 } from './style';
 
 type userProfileProps = {
@@ -24,9 +26,9 @@ function UserProfile({ _id, id, nickname }: userProfileProps) {
       </ImageBox>
       <BoxDivider />
       <FieldBox>
-        <FieldA target="_blank" href={`/users/${_id}`}>
+        <FieldLink onClick={() => history.push(`/users/${_id}`)}>
           {id}
-        </FieldA>
+        </FieldLink>
         {nickname ? (
           <FieldA
             target="_blank"
@@ -41,7 +43,14 @@ function UserProfile({ _id, id, nickname }: userProfileProps) {
         <Field>🎙️ : ??</Field>
         <Field>성별 : ??</Field>
       </FieldBox>
-      <Star onClick={() => alert('아직 구현되지 않았습니다.')}>★</Star>
+      <Btn onClick={() => alert('아직 구현되지 않았습니다.')}>★</Btn>
+      <Btn
+        style={{ top: '3px', right: '33px' }}
+        onClick={() => alert('아직 구현되지 않았습니다.')}
+        isChcek
+      >
+        ↻
+      </Btn>
     </ProfileBox>
   );
 }

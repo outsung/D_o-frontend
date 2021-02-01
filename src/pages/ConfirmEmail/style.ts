@@ -44,14 +44,14 @@ export const SlothVideo = styled.video`
 export const Btn = styled.div`
   color: #fff;
   font-size: 20px;
-  
+
   height: 40px;
 
   transition: all 0.2s;
 
   cursor: pointer;
-  
-  &:hover{
+
+  &:hover {
     font-size: 22px;
-  } 
+  }
 `;
