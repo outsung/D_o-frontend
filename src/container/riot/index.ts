@@ -1,6 +1,6 @@
 import callApi from '../../utils/api';
 
-export type updateLolInfoProps = {
+export type updateLolInfoRes = {
   result: 1 | -1;
   idx: string;
   id: string;
@@ -12,5 +12,5 @@ export type updateLolInfoProps = {
   lolChampion: string;
 };
 export const updateLolInfo = function (idx: string) {
-  return callApi.get<{}, updateLolInfoProps>(`users/lolInfo/${idx}`);
+  return callApi.get<{}, updateLolInfoRes>(`users/lolInfo/${idx}`);
 };

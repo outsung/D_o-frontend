@@ -4,7 +4,7 @@ interface signupVerifyProps extends signupReq {
   rPassword: string;
 }
 export const signupVerify = (req: signupVerifyProps) => {
-  if (req.id && req.password && req.nickname && req.rPassword)
+  if (!(req.id && req.password && req.nickname && req.rPassword))
     return { result: -1, message: '필수 입력칸이 비어있습니다.' };
   if (
     !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
@@ -29,7 +29,7 @@ export const signupVerify = (req: signupVerifyProps) => {
 };
 
 export const loginVerify = (req: loginReq) => {
-  if (req.id && req.password)
+  if (!(req.id && req.password))
     return { result: -1, message: '필수 입력칸이 비어있습니다.' };
   if (
     !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(

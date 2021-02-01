@@ -56,6 +56,10 @@ export type allgetRes = {
   nickname: string;
   createdAt: string;
   updatedAt: string;
+  lolChampion: string;
+  lolLevel: string;
+  lolTear: string;
+  lolLane: string;
 };
 export const allget = function () {
   return callApi.get<{}, [allgetRes]>('users/test');
