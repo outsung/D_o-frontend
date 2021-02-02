@@ -1,7 +1,6 @@
-import React, { useState, useMemo, useRef, Fragment } from 'react';
+import React, { useMemo, useRef, Fragment } from 'react';
 import * as THREE from 'three';
 import { MeshProps } from 'react-three-fiber';
-import { HTML } from '@react-three/drei';
 
 import {
   useBox,
@@ -52,51 +51,6 @@ export function PhyBox({ color, meshProps, ...props }: phyBoxProps) {
   );
 }
 PhyBox.defaultProps = { meshProps: undefined };
-
-/* BoxInfo */
-export interface phyBoxInfoProps extends BoxProps {
-  color: string;
-  info: string;
-  meshProps?: MeshProps;
-}
-export function PhyBoxInfo({
-  color,
-  info,
-  meshProps,
-  ...props
-}: phyBoxInfoProps) {
-  const [hovered, setHover] = useState(false);
-  const [ref, api] = useBox(() => ({
-    mass: 1,
-    ...props,
-  }));
-  const { args } = props;
-
-  return (
-    <mesh
-      {...meshProps}
-      scale={
-        hovered
-          ? [args[0] + 0.05, args[1] + 0.05, args[2] + 0.05]
-          : [args[0], args[0], args[0]]
-      }
-      ref={ref}
-      onClick={() => api.applyImpulse([5, 0, -5], [0, 0, 0])}
-      onPointerOver={() => setHover(true)}
-      onPointerOut={() => setHover(false)}
-    >
-      <boxBufferGeometry />
-      <meshStandardMaterial color={color} />
-      <HTML
-        scaleFactor={10}
-        style={{ pointerEvents: 'none', display: hovered ? 'block' : 'none' }}
-      >
-        <div className="content">info : {info}</div>
-      </HTML>
-    </mesh>
-  );
-}
-PhyBoxInfo.defaultProps = { meshProps: undefined };
 
 /* Char */
 export interface phyCharProps extends BoxProps {
@@ -281,7 +235,6 @@ export function PhyString({
 
       {Array.from(string).map((char, i) => (
         <Fragment key={`${char}${i}`}>
-          s
           {i !== 0 ? (
             <ConeTwistConstraint
               bodyA={bodys[i - 1]}

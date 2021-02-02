@@ -18,7 +18,7 @@ export const ForwardPage = styled.div`
 
   width: 100%;
   height: 100%;
-  
+
   z-index: 1;
 `;
 
@@ -28,19 +28,17 @@ export const DuoTitle = styled.div`
   font-size: 15vw;
   font-weight: bold;
 
-  color: #944E61;
+  color: #944e61;
 `;
-
 
 const fadeinAnimation = keyframes`
   from { opacity: 0; }
   to { opacity: 1; }
-`
+`;
 export const Fadein = styled.div`
   width: 100%;
   height: 100%;
 
   animation: ${fadeinAnimation} 2s;
   animation-fill-mode: forwards;
-`
-
+`;

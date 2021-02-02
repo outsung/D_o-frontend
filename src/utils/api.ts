@@ -3,9 +3,7 @@ import callCookie from './cookie';
 
 type fetchMethod = 'get' | 'post' | 'put' | 'delete';
 
-const errorHandling = async function (
-  response: Response,
-): Promise<boolean> {
+const errorHandling = async function (response: Response): Promise<boolean> {
   const { text, ok, status } = response;
 
   if (!ok) {
@@ -55,7 +53,10 @@ const callApiBase = async function <I, O>(
   method: fetchMethod,
   body: I | undefined = undefined,
 ): Promise<O | undefined> {
-  const serverUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  let serverUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+  if (url.indexOf('http://') !== -1 || url.indexOf('https://') !== -1)
+    serverUrl = '';
 
   const response: Response = await callFetch<I>(
     `${serverUrl}${url}`,
@@ -72,7 +73,8 @@ const callApiBase = async function <I, O>(
 };
 
 export default {
-  get: <I, O>(url: string): Promise<O | undefined> => callApiBase<I, O>(url, 'get'),
+  get: <I, O>(url: string): Promise<O | undefined> =>
+    callApiBase<I, O>(url, 'get'),
   post: <I, O>(url: string, body: I): Promise<O | undefined> =>
     callApiBase<I, O>(url, 'post', body),
   put: <I, O>(url: string, body: I): Promise<O | undefined> =>
