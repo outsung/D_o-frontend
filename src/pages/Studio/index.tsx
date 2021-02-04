@@ -52,12 +52,12 @@ const Studio = () => {
     const socket = socketio.connect(
       `${serverUrl}?auth=${callCookie.get('jwt')}`,
     );
-
     socket.emit('login');
     socket.on('online', (onlineString: string[]) => {
       setOnlineUsersIdx(onlineString);
     });
-
+    
+    
     return function () {
       socket.disconnect();
     };
