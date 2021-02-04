@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Input,
@@ -8,18 +8,10 @@ import {
   SignupBtn,
 } from './style';
 
-import callApi from '../../../utils/api';
-import history from '../../../utils/browserHistory';
+import { signup } from '../../../container/users';
+import { signupVerify } from '../../../container/users/verify';
 
-type signupReq = {
-  id: string;
-  password: string;
-  nickname: string;
-};
-type signupRes = {
-  result: 1 | -1;
-  message: string;
-};
+import history from '../../../utils/browserHistory';
 
 function SignupForm() {
   const [signupField, setSignupField] = useState({
@@ -28,8 +20,6 @@ function SignupForm() {
     rPassword: '',
     nickname: '',
   });
-
-  const signupBtn = useRef({} as HTMLButtonElement);
 
   const { email, password, rPassword, nickname } = signupField;
 
@@ -42,54 +32,31 @@ function SignupForm() {
     });
   };
 
-  const signup = async function () {
-    signupBtn.current.disabled = true;
-    signupBtn.current.classList.add('on');
-    // console.log(res);
+  const onClickSignupBtn = async function (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) {
+    const target = e.currentTarget;
+    target.disabled = true;
+    target.classList.add('on');
 
-    if (!(email && password && nickname && rPassword)) {
-      alert('필드가 비어있습니다.');
-      signupBtn.current.disabled = false;
-      signupBtn.current.classList.remove('on');
+    const verify = signupVerify({
+      id: email,
+      password,
+      rPassword,
+      nickname,
+    });
+    if (verify.result === -1) {
+      alert(verify.message);
+      target.disabled = false;
+      target.classList.remove('on');
       return;
     }
-    if (password !== rPassword) {
-      alert('비밀번호가 다릅니다.');
-      signupBtn.current.disabled = false;
-      signupBtn.current.classList.remove('on');
-      return;
-    }
-    if (
-      !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
-        email,
-      )
-    ) {
-      alert('이메일 형식이 아닙니다.');
-      signupBtn.current.disabled = false;
-      signupBtn.current.classList.remove('on');
-    }
 
-    const res = await callApi.post<signupReq, signupRes>('users/signup', {
+    const res = await signup({
       id: email,
       password,
       nickname,
     });
-
-    if (res?.result === -1) {
-      setSignupField({
-        email: '',
-        password: '',
-        rPassword: '',
-        nickname: '',
-      });
-
-      alert('이미 있는 이메일입니다.');
-
-      signupBtn.current.disabled = false;
-      signupBtn.current.classList.remove('on');
-
-      return;
-    }
 
     setSignupField({
       email: '',
@@ -97,6 +64,13 @@ function SignupForm() {
       rPassword: '',
       nickname: '',
     });
+    target.disabled = false;
+    target.classList.remove('on');
+
+    if (res?.result === -1) {
+      alert('이미 있는 이메일입니다.');
+      return;
+    }
 
     alert('회원가입이 되었습니다.');
 
@@ -138,10 +112,12 @@ function SignupForm() {
         />
       </Container>
       <LinkContainer>
-        <LoginLink to="/login">로그인</LoginLink>
-        <FindLink to="/find">아이디 / 비밀번호 찾기</FindLink>
+        <LoginLink onClick={() => history.push('/login')}>로그인</LoginLink>
+        <FindLink onClick={() => history.push('/find')}>
+          아이디 / 비밀번호 찾기
+        </FindLink>
       </LinkContainer>
-      <SignupBtn ref={signupBtn} type="button" onClick={signup}>
+      <SignupBtn type="button" onClick={onClickSignupBtn}>
         Signup !
       </SignupBtn>
     </>

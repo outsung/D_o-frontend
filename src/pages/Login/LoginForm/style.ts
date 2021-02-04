@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Link }from 'react-router-dom'
 
 export const Container = styled.div`
   display: flex;
@@ -9,7 +8,6 @@ export const Container = styled.div`
 
   border-radius: 12px;
 
-
   width: 420px;
 
   // background-color: #FFF;
@@ -17,7 +15,7 @@ export const Container = styled.div`
 
 export const Input = styled.input`
   margin-bottom: 8px;
-  
+
   border: solid 1px #dadada;
   border-radius: 6px;
 
@@ -25,12 +23,12 @@ export const Input = styled.input`
 
   width: 90%;
   height: 45px;
-  
+
   font-size: 16px;
 
-  background: #FFFAFA;
+  background: #fffafa;
 
-  &:focus{
+  &:focus {
     outline: none;
   }
 `;
@@ -41,9 +39,8 @@ export const InputName = styled.div`
   width: 15%;
   margin-right: 3%;
 
-  color: #FFFAFA;
+  color: #fffafa;
 `;
-
 
 export const LinkContainer = styled.div`
   display: flex;
@@ -59,22 +56,23 @@ export const LinkContainer = styled.div`
   box-sizing: border-box;
 `;
 
-export const SignupLink = styled(Link)`
-  color: #0C0000;
+export const SignupLink = styled.div`
+  color: #0c0000;
   opacity: 0.6;
 
   text-decoration: none;
+  cursor: pointer;
 `;
 
-export const FindLink = styled(Link)`
+export const FindLink = styled.div`
   margin-left: auto;
 
-  color: #0C0000;
+  color: #0c0000;
   opacity: 0.6;
-  
-  text-decoration: none;
-`;
 
+  text-decoration: none;
+  cursor: pointer;
+`;
 
 export const LoginBtn = styled.button`
   margin-top: 60px;
@@ -85,16 +83,16 @@ export const LoginBtn = styled.button`
   width: 420px;
   height: 100px;
 
-  color: #FFFAFA;
+  color: #fffafa;
   font-size: 50px;
   font-weight: bold;
 
-  background-color: #F2A663;
+  background-color: #f2a663;
 
   cursor: pointer;
 
-  &.on{
-    background-color: #D99559;
-    color: #E6E1E1;
+  &.on {
+    background-color: #d99559;
+    color: #e6e1e1;
   }
 `;

@@ -1,17 +1,16 @@
 import callApi from '../../utils/api';
 
-// [bad]
-
-export type getSummonerRes = {
-  id: string,
-  accountId: string,
-  puuid: string,
-  name: string,
-  profileIconId: number,
-  revisionDate: number,
-  summonerLevel: number
+export type updateLolInfoRes = {
+  result: 1 | -1;
+  idx: string;
+  id: string;
+  nickname: string;
+  profileImageUrl: string;
+  lolTear: string;
+  lolLevel: string;
+  lolLane: string;
+  lolChampion: string;
 };
-export const getSummoner = function(nickname: string) {
-  const url = `https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/${nickname}?api_key=${process.env.REACT_APP_RIOT_API_KEY}`;
-  return callApi.get<{}, getSummonerRes>(url);
+export const updateLolInfo = function (idx: string) {
+  return callApi.get<{}, updateLolInfoRes>(`users/lolInfo/${idx}`);
 };

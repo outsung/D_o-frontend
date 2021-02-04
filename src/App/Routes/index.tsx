@@ -26,7 +26,7 @@ const Routes = () => (
 
       <AuthRoute exact path="/main" component={Studio} />
 
-      <AuthRoute exact path="/users/:_id" component={Users} />
+      <AuthRoute exact path="/users/:idx" component={Users} />
 
       <Route component={Empty} />
     </Switch>

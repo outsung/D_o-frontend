@@ -1,8 +1,6 @@
-import React, { useState, useMemo, useRef, Fragment } from 'react';
+import React, { useMemo, useRef, Fragment } from 'react';
 import * as THREE from 'three';
 import { MeshProps } from 'react-three-fiber';
-import { HTML } from '@react-three/drei';
-import { a, useSpring } from '@react-spring/three';
 
 import {
   useBox,
@@ -53,75 +51,6 @@ export function PhyBox({ color, meshProps, ...props }: phyBoxProps) {
   );
 }
 PhyBox.defaultProps = { meshProps: undefined };
-
-/* BoxInfo */
-export interface phyBoxInfoProps extends BoxProps {
-  color: string;
-  children: React.ReactElement;
-  meshProps?: MeshProps;
-}
-export function PhyBoxInfo({
-  color,
-  children,
-  meshProps,
-  ...props
-}: phyBoxInfoProps) {
-  const [clicked, setClicked] = useState(false);
-  const [hovered, setHover] = useState(false);
-  const [hoveredHTML, setHoveredHTML] = useState(false);
-
-  const [ref] = useBox(() => ({
-    mass: 1,
-    ...props,
-  }));
-  const { args } = props;
-
-  // animation
-  const { spring } = useSpring({
-    spring: Number(clicked),
-    config: { mass: 5, tension: 400, friction: 50, precision: 0.0001 },
-  });
-
-  const scale = spring.to([0, 1], [args[0], args[0] * 2]);
-
-  return (
-    <a.mesh
-      {...meshProps}
-      // scale={
-      //   hovered || hoveredHTML
-      //     ? [args[0] + 0.05, args[1] + 0.05, args[2] + 0.05]
-      //     : [args[0], args[1], args[2]]
-      // }
-      ref={ref}
-      onClick={() => {
-        // ref.current?.position.setY(2);
-        setClicked(!clicked);
-        // api.applyImpulse([5, 0, -5], [0, 0, 0]);
-      }}
-      scale-z={scale}
-      scale-y={scale}
-      scale-x={scale}
-      onPointerOver={() => setHover(true)}
-      onPointerOut={() => setHover(false)}
-    >
-      <boxBufferGeometry />
-      <meshStandardMaterial color={color} />
-      <HTML
-        style={{
-          display: clicked && (hovered || hoveredHTML) ? 'block' : 'none',
-        }}
-      >
-        <div
-          onPointerEnter={() => setHoveredHTML(true)}
-          onPointerLeave={() => setHoveredHTML(false)}
-        >
-          {children}
-        </div>
-      </HTML>
-    </a.mesh>
-  );
-}
-PhyBoxInfo.defaultProps = { meshProps: undefined };
 
 /* Char */
 export interface phyCharProps extends BoxProps {
