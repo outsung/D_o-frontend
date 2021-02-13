@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
-// import * as THREE from 'three';
+import React, { useState, useMemo } from 'react';
+import * as THREE from 'three';
 import { MeshProps, useFrame } from 'react-three-fiber';
 import { HTML } from '@react-three/drei';
 import { animated, useSpring } from '@react-spring/three';
 
 import { useBox, BoxProps } from '@react-three/cannon';
 
+import fontJSON from '../../components/Phy/Do Hyeon_Regular';
+
 /* BoxInfo */
 export interface phyBoxInfoProps extends BoxProps {
   clicked: string | undefined;
   setClicked: (idx: string) => void;
+  isFavorites: boolean;
   color: string;
   children: React.ReactElement;
   meshProps?: MeshProps;
@@ -17,11 +20,19 @@ export interface phyBoxInfoProps extends BoxProps {
 export function PhyBoxInfo({
   clicked,
   setClicked,
+  isFavorites,
   color,
   children,
   meshProps,
   ...props
 }: phyBoxInfoProps) {
+  const font = useMemo(() => {
+    const loader = new THREE.FontLoader();
+    const f = loader.parse(fontJSON);
+    return f;
+  }, []);
+
+  const [star, setStar] = useState(false);
   const [hovered, setHover] = useState(false);
   const [hoveredHTML, setHoveredHTML] = useState(false);
 
@@ -32,24 +43,36 @@ export function PhyBoxInfo({
 
   const { ...clickAnimation } = useSpring({
     postionY: clicked ? 12 : 0,
-    scale: clicked ? [1.5, 1.5, 1.5] : [0.5, 0.5, 0.5],
+    scale: clicked ? 1.5 : 0.5,
     rotation: clicked ? [3.14159, 0, 0.785398 + 0.785398] : [0, 0, 0],
+    config: { mass: 10, tension: 1000, friction: 300, precision: 0.00001 },
+  });
+
+  const { ...favoritesAnimation } = useSpring({
+    scaleSin: isFavorites ? Math.PI : 0,
     config: { mass: 10, tension: 1000, friction: 300, precision: 0.00001 },
   });
 
   useFrame(() => {
     if (!ref.current) return;
-    const { postionY, scale, rotation } = clickAnimation;
+    const { postionY, rotation } = clickAnimation;
+
+    const cs = clickAnimation.scale.get();
+    const fs = favoritesAnimation.scaleSin.get();
+    let s = cs;
+    if (fs !== 0) s = -Math.sin(fs) * 0.5 + 0.5;
 
     ref.current.position.y += postionY.get();
 
-    const s = scale.get();
-    ref.current.scale.set(s[0], s[1], s[2]);
+    ref.current.scale.set(s, s, s);
 
     if (clicked !== undefined) {
       const r = rotation.get();
       ref.current.rotation.set(r[0], r[1], r[2]);
     }
+
+    if (fs >= Math.PI / 2) setStar(true);
+    else setStar(false);
   });
 
   return (
@@ -63,7 +86,17 @@ export function PhyBoxInfo({
         onPointerOver={() => setHover(true)}
         onPointerOut={() => setHover(false)}
       >
-        <boxBufferGeometry />
+        {star ? (
+          <textGeometry
+            onUpdate={(self) => {
+              self.center();
+            }}
+            args={['★', { font, size: 1, height: 0.5 }]}
+          />
+        ) : (
+          <boxBufferGeometry />
+        )}
+
         <meshStandardMaterial color={color} />
         <HTML
           style={{

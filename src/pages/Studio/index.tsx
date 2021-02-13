@@ -1,22 +1,28 @@
 import React, { Suspense, useEffect, useState, useRef } from 'react';
 // import * as THREE from 'three';
-import { Canvas, useFrame } from 'react-three-fiber';
+import { Canvas } from 'react-three-fiber';
 import { softShadows } from '@react-three/drei';
 import { Physics } from '@react-three/cannon';
-import { useSpring } from '@react-spring/three';
 import socketio from 'socket.io-client';
 
 import callCookie from '../../utils/cookie';
 
-import { PhyChar, PhyPlane, PhyString } from '../../components/Phy';
+import { PhyPlane, PhyString } from '../../components/Phy';
 import { PhyBoxInfo } from './PhyBoxInfo';
+import CameraAnimation from './CameraAnimation';
 
 // import Controls from '../../utils/Controls';
 import Loader from '../../components/Loader';
 
 import UserProfile from '../../components/UserProfile';
 
-import { StudioPage, WaitingBnt, UserInfoBox } from './style';
+import {
+  StudioPage,
+  WaitingBnt,
+  OptionBtn,
+  OptionLabel,
+  UserInfoBox,
+} from './style';
 
 // @api
 import { allget, allgetRes } from '../../container/users';
@@ -30,26 +36,18 @@ softShadows({});
 const serverUrl =
   'https://duo-serverrr.herokuapp.com' || 'http://localhost:5000';
 
-function CameraAnimation({ clicked }: { clicked: string | undefined }) {
-  const { postionY } = useSpring({
-    postionY: clicked ? 12 : 0,
-    config: { mass: 10, tension: 1000, friction: 300, precision: 0.00001 },
-  });
-  useFrame((state) => {
-    state.camera.position.y = postionY.get() + 3;
-  });
-
-  return <></>;
-}
-
 function Studio() {
+  const [optionClicked, setOptionClicked] = useState(false);
   const [clicked, setClicked] = useState<string>();
   const [users, setUsers] = useState<[allgetRes]>();
   const [onlineUsersIdx, setOnlineUsersIdx] = useState<string[]>();
   const clickedUserRef = useRef<allgetRes>();
 
+  const [favorites, setFavorites] = useState<string[]>([]);
+
   const init = async function () {
     setUsers(await allget());
+    setFavorites(['6016b61e3974c70017436583']);
   };
 
   useEffect(() => {
@@ -60,7 +58,6 @@ function Studio() {
     const socket = socketio.connect(
       `${serverUrl}?auth=${callCookie.get('jwt')}`,
     );
-
     socket.emit('login');
     socket.on('online', (onlineString: string[]) => {
       setOnlineUsersIdx(onlineString);
@@ -75,7 +72,17 @@ function Studio() {
 
   return (
     <StudioPage>
-      <WaitingBnt className={clicked ? 'on' : ''}>Next +4</WaitingBnt>
+      <WaitingBnt
+        className={`${optionClicked ? 'left' : ''} ${clicked ? 'down' : ''}`}
+      >
+        Next +4
+        <OptionBtn
+          className={optionClicked ? 'on' : ''}
+          onClick={() => setOptionClicked(!optionClicked)}
+        >
+          ⛶<OptionLabel>매칭 설정</OptionLabel>
+        </OptionBtn>
+      </WaitingBnt>
       <UserInfoBox className={clicked ? 'on' : ''}>
         {clickedUserRef.current ? (
           <>
@@ -97,7 +104,7 @@ function Studio() {
       >
         <fog attach="fog" args={['white', 0, 40]} />
 
-        <CameraAnimation clicked={clicked} />
+        <CameraAnimation optionClicked={optionClicked} boxClicked={clicked} />
 
         {/* 조명 */}
         <ambientLight intensity={0.4} />
@@ -139,6 +146,7 @@ function Studio() {
                     clicked === undefined || clicked === user._id ? clicked : ''
                   }
                   setClicked={setClicked}
+                  isFavorites={favorites.includes(user._id)}
                   color={onlineUsersIdx?.includes(user._id) ? 'red' : '#575757'}
                   rotation={[
                     getRandomArbitrary(0, Math.PI),
@@ -160,22 +168,24 @@ function Studio() {
                   <UserProfile
                     _id={user._id}
                     id={user.id}
+                    age={user.age}
+                    gender={user.gender}
                     nickname={user.nickname}
+                    tear={user.lolTear}
+                    lane={user.lolLane}
+                    isFavorites={favorites.includes(user._id)}
+                    addFavorites={(idx) => {
+                      setFavorites([...favorites, idx]);
+                    }}
+                    removeFavorites={(idx) => {
+                      setFavorites(favorites.filter((f) => f !== idx));
+                    }}
                   />
                 </PhyBoxInfo>
               ))
             ) : (
               <></>
             )}
-
-            <PhyChar
-              position={[0, 4, 1]}
-              char="★"
-              size={0.7}
-              height={0.35}
-              impulse={10}
-              color="#fff"
-            />
 
             <PhyString
               color="#F28B66"

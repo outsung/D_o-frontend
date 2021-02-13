@@ -53,9 +53,11 @@ export const confirmEmail = async function (key: string) {
 export type allgetRes = {
   _id: string;
   id: string;
+
+  age: number;
+  gender: 'male' | 'female' | 'Private';
+
   nickname: string;
-  createdAt: string;
-  updatedAt: string;
   lolChampion: string;
   lolLevel: string;
   lolTear: string;
