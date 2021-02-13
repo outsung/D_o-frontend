@@ -1,6 +1,4 @@
 import React from 'react';
-import history from '../../utils/browserHistory';
-
 import {
   ProfileBox,
   ImageBox,
@@ -8,17 +6,35 @@ import {
   BoxDivider,
   FieldBox,
   Field,
-  FieldA,
-  FieldLink,
   Btn,
 } from './style';
+
+const GENDER_KR = { male: '남자', female: '여자', Private: '비공개' };
 
 type userProfileProps = {
   _id: string;
   id: string;
   nickname: string;
+  tear: string;
+  lane: string;
+  age: number;
+  gender: 'male' | 'female' | 'Private';
+  isFavorites: boolean;
+  addFavorites: (idx: string) => void;
+  removeFavorites: (idx: string) => void;
 };
-function UserProfile({ _id, id, nickname }: userProfileProps) {
+function UserProfile({
+  _id,
+  id,
+  nickname,
+  tear,
+  lane,
+  age,
+  gender,
+  isFavorites,
+  addFavorites,
+  removeFavorites,
+}: userProfileProps) {
   return (
     <ProfileBox>
       <ImageBox>
@@ -26,24 +42,20 @@ function UserProfile({ _id, id, nickname }: userProfileProps) {
       </ImageBox>
       <BoxDivider />
       <FieldBox>
-        <FieldLink onClick={() => history.push(`/users/${_id}`)}>
-          {id}
-        </FieldLink>
-        {nickname ? (
-          <FieldA
-            target="_blank"
-            href={`https://www.op.gg/summoner/userName=${nickname}`}
-          >
-            {nickname}
-          </FieldA>
-        ) : (
-          <Field>...</Field>
-        )}
-        <Field>브론즈 | 원딜</Field>
-        <Field>🎙️ : ??</Field>
-        <Field>성별 : ??</Field>
+        <Field>{id}</Field>
+        <Field>{nickname}</Field>
+        <Field>
+          {tear || 'Unranked'} | {lane || 'ALL'}
+        </Field>
+        <Field>나이 : {age}</Field>
+        <Field>성별 : {GENDER_KR[gender]}</Field>
       </FieldBox>
-      <Btn onClick={() => alert('아직 구현되지 않았습니다.')}>★</Btn>
+      <Btn
+        isChcek={isFavorites}
+        onClick={() => (isFavorites ? removeFavorites(_id) : addFavorites(_id))}
+      >
+        ★
+      </Btn>
       <Btn
         style={{ top: '3px', right: '33px' }}
         onClick={() => alert('아직 구현되지 않았습니다.')}
