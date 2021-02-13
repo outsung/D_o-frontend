@@ -62,6 +62,7 @@ export type allgetRes = {
   lolLevel: string;
   lolTear: string;
   lolLane: string;
+  lolRefreshTime: Date;
 };
 export const allget = function () {
   return callApi.get<{}, [allgetRes]>('users/test');
@@ -91,6 +92,7 @@ export type updateLolInfoRes = {
   lolLevel: string;
   lolLane: string;
   lolChampion: string;
+  lolRefreshTime: Date;
 };
 export const updateLolInfo = function (_id: string) {
   return callApi.get<{}, updateLolInfoRes>(`users/lolInfo/${_id}`);

@@ -72,6 +72,7 @@ function Studio() {
     if (!users) return;
     const newUser = await updateLolInfo(_id);
     if (!newUser) return;
+    // console.log('newUser', newUser);
     setUsers(users.map((u) => (u._id === _id ? newUser : u)));
   };
 
@@ -180,6 +181,7 @@ function Studio() {
                     nickname={user.nickname}
                     tear={user.lolTear}
                     lane={user.lolLane}
+                    refreshTime={user.lolRefreshTime}
                     clickUpdateBtn={clickUpdateBtn}
                     isFavorites={favorites.includes(user._id)}
                     addFavorites={(idx) => {

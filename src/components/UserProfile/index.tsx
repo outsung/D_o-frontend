@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   ProfileBox,
   ImageBox,
@@ -19,6 +19,7 @@ type userProfileProps = {
   lane: string;
   age: number;
   gender: 'male' | 'female' | 'Private';
+  refreshTime: Date | undefined;
   clickUpdateBtn: (_id: string) => void;
   isFavorites: boolean;
   addFavorites: (idx: string) => void;
@@ -32,11 +33,44 @@ function UserProfile({
   lane,
   age,
   gender,
+  refreshTime,
   clickUpdateBtn,
   isFavorites,
   addFavorites,
   removeFavorites,
 }: userProfileProps) {
+  const elapsedMSec = useMemo(() => {
+    const date = new Date();
+    if (!refreshTime) return 1000 * 150;
+    const refreshDate = new Date(refreshTime);
+    return date.getTime() - refreshDate.getTime();
+  }, [refreshTime]);
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [updateBtnCheck, setUpdateBtnCheck] = useState(false);
+
+  useEffect(() => {
+    setUpdateBtnCheck(false);
+    setIsRefreshing(false);
+  }, [refreshTime]);
+
+  useEffect(() => {
+    const elapsedSec = elapsedMSec / 1000;
+    const is = elapsedSec > 120;
+
+    const afterTime = 120 - elapsedSec;
+
+    const timeoutHandle = setTimeout(
+      () => {
+        setUpdateBtnCheck(true);
+      },
+      is ? 1 : afterTime * 1000,
+    );
+    return () => {
+      clearTimeout(timeoutHandle);
+    };
+  }, [elapsedMSec]);
+
   return (
     <ProfileBox>
       <ImageBox>
@@ -53,17 +87,21 @@ function UserProfile({
         <Field>성별 : {GENDER_KR[gender]}</Field>
       </FieldBox>
       <Btn
-        isChcek={isFavorites}
+        isCheck={isFavorites}
         onClick={() => (isFavorites ? removeFavorites(_id) : addFavorites(_id))}
       >
         ★
       </Btn>
       <Btn
+        className={isRefreshing ? 'refreshing' : ''}
         style={{ top: '3px', right: '33px' }}
         onClick={() => {
-          clickUpdateBtn(_id);
+          if (updateBtnCheck && !isRefreshing) {
+            setIsRefreshing(true);
+            clickUpdateBtn(_id);
+          }
         }}
-        isChcek
+        isCheck={updateBtnCheck}
       >
         ↻
       </Btn>
