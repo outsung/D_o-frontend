@@ -76,3 +76,22 @@ export type getByIdxRes = {
 export const getByIdx = function (_id: string) {
   return callApi.get<{}, getByIdxRes>(`users/idx/${_id}`);
 };
+
+// updateLolInfo
+export type updateLolInfoRes = {
+  result: 1 | -1;
+  _id: string;
+  id: string;
+
+  age: number;
+  gender: 'male' | 'female' | 'Private';
+
+  nickname: string;
+  lolTear: string;
+  lolLevel: string;
+  lolLane: string;
+  lolChampion: string;
+};
+export const updateLolInfo = function (_id: string) {
+  return callApi.get<{}, updateLolInfoRes>(`users/lolInfo/${_id}`);
+};

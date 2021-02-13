@@ -25,7 +25,7 @@ import {
 } from './style';
 
 // @api
-import { allget, allgetRes } from '../../container/users';
+import { allget, allgetRes, updateLolInfo } from '../../container/users';
 
 function getRandomArbitrary(min: number, max: number) {
   return Math.random() * (max - min) + min;
@@ -39,7 +39,7 @@ const serverUrl =
 function Studio() {
   const [optionClicked, setOptionClicked] = useState(false);
   const [clicked, setClicked] = useState<string>();
-  const [users, setUsers] = useState<[allgetRes]>();
+  const [users, setUsers] = useState<allgetRes[]>();
   const [onlineUsersIdx, setOnlineUsersIdx] = useState<string[]>();
   const clickedUserRef = useRef<allgetRes>();
 
@@ -67,6 +67,13 @@ function Studio() {
       socket.disconnect();
     };
   }, []);
+
+  const clickUpdateBtn = async (_id: string) => {
+    if (!users) return;
+    const newUser = await updateLolInfo(_id);
+    if (!newUser) return;
+    setUsers(users.map((u) => (u._id === _id ? newUser : u)));
+  };
 
   if (clicked) clickedUserRef.current = users?.find((u) => u._id === clicked);
 
@@ -173,6 +180,7 @@ function Studio() {
                     nickname={user.nickname}
                     tear={user.lolTear}
                     lane={user.lolLane}
+                    clickUpdateBtn={clickUpdateBtn}
                     isFavorites={favorites.includes(user._id)}
                     addFavorites={(idx) => {
                       setFavorites([...favorites, idx]);

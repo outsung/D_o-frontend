@@ -1,12 +1,10 @@
-import React, { useState, useMemo } from 'react';
-import * as THREE from 'three';
+import React, { useState } from 'react';
+// import * as THREE from 'three';
 import { MeshProps, useFrame } from 'react-three-fiber';
 import { HTML } from '@react-three/drei';
 import { animated, useSpring } from '@react-spring/three';
 
 import { useBox, BoxProps } from '@react-three/cannon';
-
-import fontJSON from '../../components/Phy/Do Hyeon_Regular';
 
 /* BoxInfo */
 export interface phyBoxInfoProps extends BoxProps {
@@ -26,13 +24,6 @@ export function PhyBoxInfo({
   meshProps,
   ...props
 }: phyBoxInfoProps) {
-  const font = useMemo(() => {
-    const loader = new THREE.FontLoader();
-    const f = loader.parse(fontJSON);
-    return f;
-  }, []);
-
-  const [star, setStar] = useState(false);
   const [hovered, setHover] = useState(false);
   const [hoveredHTML, setHoveredHTML] = useState(false);
 
@@ -48,20 +39,11 @@ export function PhyBoxInfo({
     config: { mass: 10, tension: 1000, friction: 300, precision: 0.00001 },
   });
 
-  const { ...favoritesAnimation } = useSpring({
-    scaleSin: isFavorites ? Math.PI : 0,
-    config: { mass: 10, tension: 1000, friction: 300, precision: 0.00001 },
-  });
-
   useFrame(() => {
     if (!ref.current) return;
     const { postionY, rotation } = clickAnimation;
 
-    const cs = clickAnimation.scale.get();
-    const fs = favoritesAnimation.scaleSin.get();
-    let s = cs;
-    if (fs !== 0) s = -Math.sin(fs) * 0.5 + 0.5;
-
+    const s = clickAnimation.scale.get();
     ref.current.position.y += postionY.get();
 
     ref.current.scale.set(s, s, s);
@@ -70,9 +52,6 @@ export function PhyBoxInfo({
       const r = rotation.get();
       ref.current.rotation.set(r[0], r[1], r[2]);
     }
-
-    if (fs >= Math.PI / 2) setStar(true);
-    else setStar(false);
   });
 
   return (
@@ -86,18 +65,27 @@ export function PhyBoxInfo({
         onPointerOver={() => setHover(true)}
         onPointerOut={() => setHover(false)}
       >
-        {star ? (
-          <textGeometry
-            onUpdate={(self) => {
-              self.center();
-            }}
-            args={['★', { font, size: 1, height: 0.5 }]}
-          />
-        ) : (
-          <boxBufferGeometry />
-        )}
-
+        <boxBufferGeometry />
         <meshStandardMaterial color={color} />
+        <HTML
+          scaleFactor={10}
+          center
+          style={{
+            color: '#FAF470',
+            pointerEvents: 'none',
+          }}
+        >
+          <div
+            style={{
+              opacity: isFavorites ? 1 : 0,
+              transition: 'all 0.5s',
+              width: clicked ? '250px' : '100px',
+              height: clicked ? '250px' : '100px',
+            }}
+          >
+            ★
+          </div>
+        </HTML>
         <HTML
           style={{
             display:

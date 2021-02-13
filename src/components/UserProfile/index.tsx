@@ -19,6 +19,7 @@ type userProfileProps = {
   lane: string;
   age: number;
   gender: 'male' | 'female' | 'Private';
+  clickUpdateBtn: (_id: string) => void;
   isFavorites: boolean;
   addFavorites: (idx: string) => void;
   removeFavorites: (idx: string) => void;
@@ -31,6 +32,7 @@ function UserProfile({
   lane,
   age,
   gender,
+  clickUpdateBtn,
   isFavorites,
   addFavorites,
   removeFavorites,
@@ -58,7 +60,9 @@ function UserProfile({
       </Btn>
       <Btn
         style={{ top: '3px', right: '33px' }}
-        onClick={() => alert('아직 구현되지 않았습니다.')}
+        onClick={() => {
+          clickUpdateBtn(_id);
+        }}
         isChcek
       >
         ↻
