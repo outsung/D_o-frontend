@@ -30,7 +30,7 @@ export const DuoTitle = styled.div`
 
   color: #944e61;
 
-  user-select: 'none';
+  user-select: none;
 `;
 
 const fadeinAnimation = keyframes`
