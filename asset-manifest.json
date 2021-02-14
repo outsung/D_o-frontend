@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/Duo-frontend/static/css/main.7bb05dfd.chunk.css",
-    "main.js": "/Duo-frontend/static/js/main.d5c2c6d3.chunk.js",
-    "main.js.map": "/Duo-frontend/static/js/main.d5c2c6d3.chunk.js.map",
+    "main.js": "/Duo-frontend/static/js/main.9007df97.chunk.js",
+    "main.js.map": "/Duo-frontend/static/js/main.9007df97.chunk.js.map",
     "runtime-main.js": "/Duo-frontend/static/js/runtime-main.f85e8384.js",
     "runtime-main.js.map": "/Duo-frontend/static/js/runtime-main.f85e8384.js.map",
     "static/js/2.53760fd5.chunk.js": "/Duo-frontend/static/js/2.53760fd5.chunk.js",
@@ -20,6 +20,6 @@
     "static/js/runtime-main.f85e8384.js",
     "static/js/2.53760fd5.chunk.js",
     "static/css/main.7bb05dfd.chunk.css",
-    "static/js/main.d5c2c6d3.chunk.js"
+    "static/js/main.9007df97.chunk.js"
   ]
 }
