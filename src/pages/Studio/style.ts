@@ -39,11 +39,6 @@ export const WaitingBnt = styled.div`
 
   transition: all 1s;
 
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 
   &.down {
@@ -81,11 +76,6 @@ export const OptionBtn = styled.div`
   transition: transform 0.5s;
   transition-timing-function: cubic-bezier(0.24, 0.05, 0.445, 1.65);
 
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 
   & > div {
@@ -116,11 +106,6 @@ export const OptionLabel = styled.div`
 
   transition: all 0.5s;
 
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 `;
 
@@ -153,11 +138,8 @@ export const UserInfoBox = styled.div`
 
   transition: all 1s;
 
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+  pointer-events: none;
+
   user-select: none;
 
   &.on {
@@ -239,5 +221,31 @@ export const AccountMenuItem = styled.div`
 
   &:hover {
     color: #611eb3;
+  }
+`;
+
+export const MypageBox = styled.div`
+  position: absolute;
+  left: calc(50vw - 500px);
+  top: calc(50vh - 400px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 60px;
+
+  width: 1000px;
+  height: 800px;
+
+  opacity: 0;
+
+  transition: all 0.5s;
+
+  background-color: rgba(0, 0, 0, 0.3);
+
+  &.on {
+    opacity: 1;
+    pointer-events: none;
   }
 `;

@@ -10,6 +10,7 @@ import callCookie from '../../utils/cookie';
 import { PhyPlane, PhyString } from '../../components/Phy';
 import { PhyBoxInfo } from './PhyBoxInfo';
 import CameraAnimation from './CameraAnimation';
+import { Mypage, PhyBoxMypage } from './Mypage';
 
 // import Controls from '../../utils/Controls';
 import Loader from '../../components/Loader';
@@ -85,7 +86,6 @@ function Studio() {
     if (!users) return;
     const newUser = await updateLolInfo(_id);
     if (!newUser) return;
-    // console.log('newUser', newUser);
     setUsers(users.map((u) => (u._id === _id ? newUser : u)));
   };
 
@@ -133,6 +133,7 @@ function Studio() {
           <div>...</div>
         )}
       </UserInfoBox>
+      <Mypage mypageClicked={mypageClicked} />
       <Canvas
         colorManagement
         shadowMap
@@ -140,6 +141,7 @@ function Studio() {
       >
         <fog attach="fog" args={['white', 0, 40]} />
 
+        {/* 카메라 */}
         <CameraAnimation
           mypageClicked={mypageClicked}
           optionClicked={optionClicked}
@@ -238,6 +240,20 @@ function Studio() {
               wordSpacing={-1}
               type="Static"
               meshProps={{ receiveShadow: true, castShadow: true }}
+            />
+
+            {/* 마이페이지 */}
+            <PhyBoxMypage
+              position={[-5, -5, 0]}
+              mypageClicked={mypageClicked}
+              maxSize={2.5}
+              center={[617, 165]}
+            />
+            <PhyBoxMypage
+              position={[3, -3, 3]}
+              mypageClicked={mypageClicked}
+              maxSize={1.5}
+              center={[-465, -215]}
             />
           </Physics>
 
