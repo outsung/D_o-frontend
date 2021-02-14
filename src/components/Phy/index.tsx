@@ -14,19 +14,21 @@ import fontJSON from './Do Hyeon_Regular.js';
 
 /* Plane */
 export interface phyPlaneProps extends PlaneProps {
+  color?: string;
   meshProps?: MeshProps;
 }
-export function PhyPlane({ meshProps, ...props }: phyPlaneProps) {
+export function PhyPlane({ color, meshProps, ...props }: phyPlaneProps) {
   const [ref] = usePlane(() => ({ ...props }));
 
   return (
     <mesh {...meshProps} ref={ref}>
       <planeBufferGeometry />
-      <meshStandardMaterial />
+      <shadowMaterial attach="material" transparent opacity={0.4} />
+      {/* <meshStandardMaterial color={color} /> */}
     </mesh>
   );
 }
-PhyPlane.defaultProps = { meshProps: undefined };
+PhyPlane.defaultProps = { color: undefined, meshProps: undefined };
 
 /* Box */
 export interface phyBoxProps extends BoxProps {

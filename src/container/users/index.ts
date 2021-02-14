@@ -78,6 +78,26 @@ export const getByIdx = function (_id: string) {
   return callApi.get<{}, getByIdxRes>(`users/idx/${_id}`);
 };
 
+// getByJwt
+export type getByJwtRes = {
+  result: 1 | -1;
+  _id: string;
+  id: string;
+
+  age: number;
+  gender: 'male' | 'female' | 'Private';
+
+  nickname: string;
+  lolTear: string;
+  lolLevel: string;
+  lolLane: string;
+  lolChampion: string;
+  lolRefreshTime: Date;
+};
+export const getByJwt = function () {
+  return callApi.get<{}, getByJwtRes>(`users`);
+};
+
 // updateLolInfo
 export type updateLolInfoRes = {
   result: 1 | -1;

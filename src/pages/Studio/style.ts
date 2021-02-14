@@ -166,3 +166,78 @@ export const UserInfoBox = styled.div`
     height: calc(100vh - 14vh);
   }
 `;
+
+export const AccountMenuBox = styled.div`
+  position: absolute;
+  top: 2.5vh;
+  right: 0.8vw;
+
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+
+  width: 400px;
+  height: 60px;
+
+  z-index: 1;
+
+  &.mypage {
+    & > div {
+      transform: scale(0);
+    }
+    & > #divider {
+      margin-right: -25px;
+
+      width: 3px;
+
+      transform: scale(1);
+    }
+    & > #mypage {
+      margin-right: -80px;
+
+      font-size: 35px;
+
+      transform: scale(1);
+      &:hover {
+        color: #000;
+      }
+    }
+  }
+`;
+export const AccountMenuImage = styled.div`
+  border-radius: 100px;
+
+  width: 50px;
+  height: 50px;
+
+  background-color: #8429f0;
+
+  transition: all 0.5s;
+
+  cursor: pointer;
+`;
+export const AccountMenuDivider = styled.div`
+  margin: 0px 15px;
+
+  width: 1px;
+  height: 70%;
+
+  background-color: black;
+
+  transition: all 0.5s;
+`;
+export const AccountMenuItem = styled.div`
+  margin-left: 10px;
+
+  color: #000;
+  font-size: 19px;
+  font-weight: bold;
+
+  transition: all 0.5s;
+
+  cursor: pointer;
+
+  &:hover {
+    color: #611eb3;
+  }
+`;

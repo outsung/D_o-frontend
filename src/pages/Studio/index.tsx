@@ -13,11 +13,16 @@ import CameraAnimation from './CameraAnimation';
 
 // import Controls from '../../utils/Controls';
 import Loader from '../../components/Loader';
+import history from '../../utils/browserHistory';
 
 import UserProfile from '../../components/UserProfile';
 
 import {
   StudioPage,
+  AccountMenuBox,
+  AccountMenuImage,
+  AccountMenuDivider,
+  AccountMenuItem,
   WaitingBnt,
   OptionBtn,
   OptionLabel,
@@ -25,7 +30,12 @@ import {
 } from './style';
 
 // @api
-import { allget, allgetRes, updateLolInfo } from '../../container/users';
+import {
+  allget,
+  allgetRes,
+  getByJwt,
+  updateLolInfo,
+} from '../../container/users';
 
 function getRandomArbitrary(min: number, max: number) {
   return Math.random() * (max - min) + min;
@@ -37,9 +47,11 @@ const serverUrl =
   'https://duo-serverrr.herokuapp.com' || 'http://localhost:5000';
 
 function Studio() {
+  const [mypageClicked, setMypageClicked] = useState(false);
   const [optionClicked, setOptionClicked] = useState(false);
   const [clicked, setClicked] = useState<string>();
   const [users, setUsers] = useState<allgetRes[]>();
+  const [me, setMe] = useState<allgetRes>();
   const [onlineUsersIdx, setOnlineUsersIdx] = useState<string[]>();
   const clickedUserRef = useRef<allgetRes>();
 
@@ -47,6 +59,7 @@ function Studio() {
 
   const init = async function () {
     setUsers(await allget());
+    setMe(await getByJwt());
     setFavorites(['6016b61e3974c70017436583']);
   };
 
@@ -80,10 +93,25 @@ function Studio() {
 
   return (
     <StudioPage>
+      <AccountMenuBox className={mypageClicked ? 'mypage' : ''}>
+        <AccountMenuImage onClick={() => alert(JSON.stringify(me))} />
+        <AccountMenuDivider id="divider" />
+        <AccountMenuItem id="logout" onClick={() => history.push('/login')}>
+          로그아웃
+        </AccountMenuItem>
+        <AccountMenuItem
+          id="mypage"
+          onClick={() => setMypageClicked(!mypageClicked)}
+        >
+          마이페이지
+        </AccountMenuItem>
+      </AccountMenuBox>
       <WaitingBnt
-        className={`${optionClicked ? 'left' : ''} ${clicked ? 'down' : ''}`}
+        className={`${optionClicked ? 'left' : ''} ${
+          clicked || mypageClicked ? 'down' : ''
+        }`}
       >
-        Next +4
+        매칭 시작
         <OptionBtn
           className={optionClicked ? 'on' : ''}
           onClick={() => setOptionClicked(!optionClicked)}
@@ -91,7 +119,7 @@ function Studio() {
           ⛶<OptionLabel>매칭 설정</OptionLabel>
         </OptionBtn>
       </WaitingBnt>
-      <UserInfoBox className={clicked ? 'on' : ''}>
+      <UserInfoBox className={clicked && !mypageClicked ? 'on' : ''}>
         {clickedUserRef.current ? (
           <>
             <div>{clickedUserRef.current.id}</div>
@@ -112,7 +140,11 @@ function Studio() {
       >
         <fog attach="fog" args={['white', 0, 40]} />
 
-        <CameraAnimation optionClicked={optionClicked} boxClicked={clicked} />
+        <CameraAnimation
+          mypageClicked={mypageClicked}
+          optionClicked={optionClicked}
+          boxClicked={clicked}
+        />
 
         {/* 조명 */}
         <ambientLight intensity={0.4} />
@@ -220,8 +252,8 @@ function Studio() {
           </mesh>
         </Suspense>
 
-        {/* <Controls />
-        <gridHelper /> */}
+        {/* <Controls /> */}
+        <gridHelper />
       </Canvas>
     </StudioPage>
   );
