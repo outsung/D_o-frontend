@@ -10,7 +10,9 @@ import callCookie from '../../utils/cookie';
 import { PhyPlane, PhyString } from '../../components/Phy';
 import { PhyBoxInfo } from './PhyBoxInfo';
 import CameraAnimation from './CameraAnimation';
-import { Mypage, PhyBoxMypage } from './Mypage';
+import { Mypage, PhyBoxMypage, useMypage } from './Mypage';
+import useFavorites from './Favorites';
+import { Room, RoomPage, useRoom } from './Room';
 
 // import Controls from '../../utils/Controls';
 import Loader from '../../components/Loader';
@@ -30,13 +32,7 @@ import {
   UserInfoBox,
 } from './style';
 
-// @api
-import {
-  allget,
-  allgetRes,
-  getByJwt,
-  updateLolInfo,
-} from '../../container/users';
+import { allget, allgetRes, updateLolInfo } from '../../container/users';
 
 function getRandomArbitrary(min: number, max: number) {
   return Math.random() * (max - min) + min;
@@ -52,16 +48,15 @@ function Studio() {
   const [optionClicked, setOptionClicked] = useState(false);
   const [clicked, setClicked] = useState<string>();
   const [users, setUsers] = useState<allgetRes[]>();
-  const [me, setMe] = useState<allgetRes>();
   const [onlineUsersIdx, setOnlineUsersIdx] = useState<string[]>();
   const clickedUserRef = useRef<allgetRes>();
 
-  const [favorites, setFavorites] = useState<string[]>([]);
+  const { favorites, addFavorites, removeFavorites } = useFavorites();
+  const { me, newMe, changeNewMe, onSaveNewMe, onCancelNewMe } = useMypage();
+  const { roomClicked, focusRoom, onFocusRoom, onBlurRoom } = useRoom();
 
   const init = async function () {
     setUsers(await allget());
-    setMe(await getByJwt());
-    setFavorites(['6016b61e3974c70017436583']);
   };
 
   useEffect(() => {
@@ -108,7 +103,7 @@ function Studio() {
       </AccountMenuBox>
       <WaitingBnt
         className={`${optionClicked ? 'left' : ''} ${
-          clicked || mypageClicked ? 'down' : ''
+          clicked || mypageClicked || roomClicked ? 'down' : ''
         }`}
       >
         매칭 시작
@@ -133,7 +128,24 @@ function Studio() {
           <div>...</div>
         )}
       </UserInfoBox>
-      <Mypage mypageClicked={mypageClicked} />
+      <Mypage
+        newMe={newMe}
+        changeNewMe={changeNewMe}
+        mypageClicked={mypageClicked}
+      />
+      <Room
+        isMain={
+          !(roomClicked || mypageClicked || optionClicked || Boolean(clicked))
+        }
+        favorites={favorites}
+        onFocusRoom={onFocusRoom}
+      />
+      <RoomPage
+        roomClicked={roomClicked}
+        focusRoom={focusRoom}
+        onBlurRoom={onBlurRoom}
+      />
+
       <Canvas
         colorManagement
         shadowMap
@@ -143,6 +155,7 @@ function Studio() {
 
         {/* 카메라 */}
         <CameraAnimation
+          roomClicked={roomClicked}
           mypageClicked={mypageClicked}
           optionClicked={optionClicked}
           boxClicked={clicked}
@@ -218,12 +231,8 @@ function Studio() {
                     refreshTime={user.lolRefreshTime}
                     clickUpdateBtn={clickUpdateBtn}
                     isFavorites={favorites.includes(user._id)}
-                    addFavorites={(idx) => {
-                      setFavorites([...favorites, idx]);
-                    }}
-                    removeFavorites={(idx) => {
-                      setFavorites(favorites.filter((f) => f !== idx));
-                    }}
+                    addFavorites={addFavorites}
+                    removeFavorites={removeFavorites}
                   />
                 </PhyBoxInfo>
               ))
@@ -248,12 +257,16 @@ function Studio() {
               mypageClicked={mypageClicked}
               maxSize={2.5}
               center={[617, 165]}
+              type="save"
+              onReset={onSaveNewMe}
             />
             <PhyBoxMypage
               position={[3, -3, 3]}
               mypageClicked={mypageClicked}
               maxSize={1.5}
               center={[-465, -215]}
+              type="cancel"
+              onReset={onCancelNewMe}
             />
           </Physics>
 

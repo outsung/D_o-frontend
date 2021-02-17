@@ -223,29 +223,3 @@ export const AccountMenuItem = styled.div`
     color: #611eb3;
   }
 `;
-
-export const MypageBox = styled.div`
-  position: absolute;
-  left: calc(50vw - 500px);
-  top: calc(50vh - 400px);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  border-radius: 60px;
-
-  width: 1000px;
-  height: 800px;
-
-  opacity: 0;
-
-  transition: all 0.5s;
-
-  background-color: rgba(0, 0, 0, 0.3);
-
-  &.on {
-    opacity: 1;
-    pointer-events: none;
-  }
-`;

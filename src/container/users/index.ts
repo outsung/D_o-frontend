@@ -56,6 +56,7 @@ export type allgetRes = {
 
   age: number;
   gender: 'male' | 'female' | 'Private';
+  mic: '있음' | '없음';
 
   nickname: string;
   lolChampion: string;
@@ -86,6 +87,7 @@ export type getByJwtRes = {
 
   age: number;
   gender: 'male' | 'female' | 'Private';
+  mic: '있음' | '없음';
 
   nickname: string;
   lolTear: string;
@@ -106,6 +108,7 @@ export type updateLolInfoRes = {
 
   age: number;
   gender: 'male' | 'female' | 'Private';
+  mic: '있음' | '없음';
 
   nickname: string;
   lolTear: string;
@@ -116,4 +119,52 @@ export type updateLolInfoRes = {
 };
 export const updateLolInfo = function (_id: string) {
   return callApi.get<{}, updateLolInfoRes>(`users/lolInfo/${_id}`);
+};
+
+export type patchUserReq = {
+  age?: number;
+  gender?: string;
+  mic?: string;
+  nickname?: string;
+};
+export type patchUserRes = {
+  result: 1 | -1;
+  _id: string;
+  id: string;
+
+  age: number;
+  gender: 'male' | 'female' | 'Private';
+  mic: '있음' | '없음';
+
+  nickname: string;
+  lolTear: string;
+  lolLevel: string;
+  lolLane: string;
+  lolChampion: string;
+  lolRefreshTime: Date;
+};
+export const patchUser = function (req: patchUserReq) {
+  return callApi.patch<patchUserReq, updateLolInfoRes>(`users`, req);
+};
+
+export type getFavoritesRes = {
+  result: 1 | -1;
+  favorites: string[];
+};
+export const getFavorites = function () {
+  return callApi.get<{}, getFavoritesRes>(`users/favorites`);
+};
+
+export type patchFavoritesReq = {
+  favorites: string[];
+};
+export type patchFavoritesRes = {
+  result: 1 | -1;
+  favorites: string[];
+};
+export const patchFavorites = function (req: patchFavoritesReq) {
+  return callApi.patch<patchFavoritesReq, patchFavoritesRes>(
+    `users/favorites`,
+    req,
+  );
 };
