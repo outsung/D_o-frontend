@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getFavorites, patchFavorites } from '../../../container/users';
+import { getFavorites, patchFavorites } from '../../../container/favorites';
 
 export default function useFavorites() {
   const [favorites, setFavorites] = useState<string[]>([]);

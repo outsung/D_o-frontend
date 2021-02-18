@@ -1,11 +1,14 @@
-import React, { Suspense, useEffect, useState, useRef } from 'react';
+import React, {
+  Suspense,
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+} from 'react';
 // import * as THREE from 'three';
 import { Canvas } from 'react-three-fiber';
 import { softShadows } from '@react-three/drei';
 import { Physics } from '@react-three/cannon';
-import socketio from 'socket.io-client';
-
-import callCookie from '../../utils/cookie';
 
 import { PhyPlane, PhyString } from '../../components/Phy';
 import { PhyBoxInfo } from './PhyBoxInfo';
@@ -14,6 +17,7 @@ import { Mypage, PhyBoxMypage, useMypage } from './Mypage';
 import useFavorites from './Favorites';
 import { Room, RoomPage, useRoom } from './Room';
 
+import callSocket from '../../utils/socket';
 // import Controls from '../../utils/Controls';
 import Loader from '../../components/Loader';
 import history from '../../utils/browserHistory';
@@ -40,10 +44,8 @@ function getRandomArbitrary(min: number, max: number) {
 
 softShadows({});
 
-const serverUrl =
-  'https://duo-serverrr.herokuapp.com' || 'http://localhost:5000';
-
 function Studio() {
+  const socket = useRef({} as SocketIOClient.Socket);
   const [mypageClicked, setMypageClicked] = useState(false);
   const [optionClicked, setOptionClicked] = useState(false);
   const [clicked, setClicked] = useState<string>();
@@ -53,29 +55,23 @@ function Studio() {
 
   const { favorites, addFavorites, removeFavorites } = useFavorites();
   const { me, newMe, changeNewMe, onSaveNewMe, onCancelNewMe } = useMypage();
-  const { roomClicked, focusRoom, onFocusRoom, onBlurRoom } = useRoom();
+  const { room, roomClicked, focusRoom, onFocusRoom, onBlurRoom } = useRoom();
 
-  const init = async function () {
+  const init = useCallback(async () => {
     setUsers(await allget());
-  };
+    socket.current = callSocket.connect();
+    socket.current.emit('login');
+    socket.current.on('online', (onlineString: string[]) => {
+      setOnlineUsersIdx(onlineString);
+    });
+  }, []);
 
   useEffect(() => {
     init();
-  }, []);
-
-  useEffect(() => {
-    const socket = socketio.connect(
-      `${serverUrl}?auth=${callCookie.get('jwt')}`,
-    );
-    socket.emit('login');
-    socket.on('online', (onlineString: string[]) => {
-      setOnlineUsersIdx(onlineString);
-    });
-
-    return function () {
-      socket.disconnect();
+    return () => {
+      callSocket.disconnect(socket.current);
     };
-  }, []);
+  }, [init]);
 
   const clickUpdateBtn = async (_id: string) => {
     if (!users) return;
@@ -138,6 +134,7 @@ function Studio() {
           !(roomClicked || mypageClicked || optionClicked || Boolean(clicked))
         }
         favorites={favorites}
+        room={room}
         onFocusRoom={onFocusRoom}
       />
       <RoomPage
