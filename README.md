@@ -29,10 +29,11 @@
 2021.02 기준
 
 - [v.0](https://outsung.github.io/Duo-frontend/history/v.0)
-- [v.1](https://outsung.github.io/Duo-frontend/history/v.0)
-- [v.2](https://outsung.github.io/Duo-frontend/history/v.0)
-- [v.3](https://outsung.github.io/Duo-frontend/history/v.0)
-- [v.3.1](https://outsung.github.io/Duo-frontend/history/v.0)
+- [v.1](https://outsung.github.io/Duo-frontend/history/v.1)
+- [v.2](https://outsung.github.io/Duo-frontend/history/v.2)
+- [v.3](https://outsung.github.io/Duo-frontend/history/v.3)
+- [v.3.1](https://outsung.github.io/Duo-frontend/history/v.3.1)
+- [v.3.2](https://outsung.github.io/Duo-frontend/history/v.3.2)
 
 ## 시행착오 및 진행사항
 
