@@ -1,7 +1,7 @@
 {
   "homepage": "#homepage",
   "name": "client",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "private": true,
   "dependencies": {
     "@mediapipe/hands": "^0.1.1606863095",
