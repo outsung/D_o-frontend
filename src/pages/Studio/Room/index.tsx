@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
 import {
-  getRoom,
+  getRooms,
   getRoomByJwtAndIdx,
   getRoomByJwtAndIdxRes,
+  addMessageInRoom,
+  message,
 } from '../../../container/room';
 
 import {
@@ -14,43 +16,107 @@ import {
   RoomBoxLately,
   RoomBoxItem,
   RoomPageBox,
+  RoomPageBoxMessageBox,
+  RoomPageBoxMessageBoxContents,
   RoomPageBoxBackBtn,
 } from './style';
 
-const TEST =
-  'https://s3.us-west-2.amazonaws.com/secure.notion-static.com/8d66f61f-4cde-446b-8046-170777277cd9/outsung.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20210216%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210216T105108Z&X-Amz-Expires=86400&X-Amz-Signature=9abea07855cccd82aa1623cb1a22520d092eff97b4b09c52b27a4110ae74ada8&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22outsung.png%22';
-
-export function useRoom() {
-  const [room, setRoom] = useState<string[]>([]);
+export function useRoom(socket: SocketIOClient.Socket) {
+  const [rooms, setRooms] = useState<{ userIdx: string; alarm: boolean }[]>([]);
   const [focusRoom, setFocusRoom] = useState('');
   const roomClicked = Boolean(focusRoom);
 
   const init = async () => {
-    const res = await getRoom();
-    setRoom(res && res.result === 1 && res.room ? res.room : []);
+    const res = await getRooms();
+    if (res && res.result === 1) {
+      setRooms(
+        res.rooms.map((userIdx) => ({
+          userIdx,
+          alarm: res.uncheckedRoom.includes(userIdx),
+        })),
+      );
+    }
   };
   useEffect(() => {
     init();
   }, []);
 
+  useEffect(() => {
+    const onMessageOfRoom = (from: string) => {
+      if (!rooms.find((r) => r.userIdx === from))
+        setRooms([...rooms, { userIdx: from, alarm: true }]);
+      else {
+        setRooms(
+          rooms.map((r) => (r.userIdx === from ? { ...r, alarm: true } : r)),
+        );
+      }
+    };
+    socket.on('message', onMessageOfRoom);
+    return () => {
+      socket.off('message', onMessageOfRoom);
+    };
+  }, [socket, rooms]);
+
+  function setOnMessageOfRoomPage(
+    _id: string | undefined,
+    initOfRoomPage: () => void,
+  ) {
+    const onMessageOfRoomPage = (from: string) => {
+      if (from !== _id) return;
+      initOfRoomPage();
+    };
+
+    return [
+      () => {
+        socket.on('message', onMessageOfRoomPage);
+      },
+      () => {
+        socket.off('message', onMessageOfRoomPage);
+      },
+    ];
+  }
+
   const onFocusRoom = (_id: string) => {
     setFocusRoom(_id);
+
+    setRooms(
+      rooms.map((r) => (r.userIdx === _id ? { ...r, alarm: false } : r)),
+    );
   };
   const onBlurRoom = () => {
     setFocusRoom('');
   };
 
-  return { room, roomClicked, focusRoom, onFocusRoom, onBlurRoom };
+  const sendMessage = async (from: string, to: string, contents: string) => {
+    // console.log(`${from}가 ${to}에게 '${contents}'라고 합니다.`);
+    const res = await addMessageInRoom(to, { contents });
+    // console.log('res!!', res);
+    if (!res || res.result !== 1) return [];
+
+    socket.emit('message', to);
+
+    return res.messages;
+  };
+
+  return {
+    rooms,
+    roomClicked,
+    focusRoom,
+    onFocusRoom,
+    onBlurRoom,
+    sendMessage,
+    setOnMessageOfRoomPage,
+  };
 }
 
 type roomProps = {
   isMain: boolean;
   favorites: string[];
-  room: string[];
+  rooms: { userIdx: string; alarm: boolean }[];
   onFocusRoom: (_id: string) => void;
   // itemClick: () => void;
 };
-export function Room({ isMain, favorites, room, onFocusRoom }: roomProps) {
+export function Room({ isMain, favorites, rooms, onFocusRoom }: roomProps) {
   const isFavorites = Boolean(favorites.length);
 
   const itemClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -63,13 +129,18 @@ export function Room({ isMain, favorites, room, onFocusRoom }: roomProps) {
       <RoomBoxUl>
         <RoomBoxFavorites className={isFavorites ? '' : 'off'}>
           {favorites.map((f, k) => (
-            <RoomBoxItem key={k} onClick={itemClick} url={TEST} data-idx={f} />
+            <RoomBoxItem key={k} onClick={itemClick} data-idx={f} />
           ))}
         </RoomBoxFavorites>
         <RoomBoxDivider className={isFavorites ? '' : 'off'} />
         <RoomBoxLately>
-          {room.map((r, k) => (
-            <RoomBoxItem key={k} onClick={itemClick} data-idx={r} />
+          {rooms.map((r, k) => (
+            <RoomBoxItem
+              key={k}
+              onClick={itemClick}
+              className={r.alarm ? 'on' : ''}
+              data-idx={r.userIdx}
+            />
           ))}
         </RoomBoxLately>
         <RoomBoxItem onClick={itemClick}>+</RoomBoxItem>
@@ -77,15 +148,29 @@ export function Room({ isMain, favorites, room, onFocusRoom }: roomProps) {
     </RoomBox>
   );
 }
+
 type roomPageProps = {
   roomClicked: boolean;
   focusRoom: string;
   onBlurRoom: () => void;
+  sendMessage: (
+    from: string,
+    to: string,
+    contents: string,
+  ) => Promise<message[]>;
+  setOnMessageOfRoomPage: (
+    _id: string | undefined,
+    initOfRoomPage: () => void,
+  ) => Function[];
+  meIdx: string | undefined;
 };
 export function RoomPage({
   roomClicked,
   focusRoom,
   onBlurRoom,
+  sendMessage,
+  setOnMessageOfRoomPage,
+  meIdx,
 }: roomPageProps) {
   const [room, setRoom] = useState<getRoomByJwtAndIdxRes>();
 
@@ -100,34 +185,77 @@ export function RoomPage({
     init();
   }, [init]);
 
+  useEffect(() => {
+    const [onMessageOfRoomPage, cleanUp] = setOnMessageOfRoomPage(meIdx, init);
+    onMessageOfRoomPage();
+
+    return () => {
+      cleanUp();
+    };
+  }, [meIdx, init, setOnMessageOfRoomPage]);
+
+  // 상대의 idx로 닉네임을 가져와야하나?
+
+  const otherUserIdx = room?.users.find((u) => u !== meIdx);
+
   return (
     <RoomPageBox className={roomClicked ? 'on' : ''}>
       {room ? (
         <>
-          <h1>{room._id}</h1>
-          <h1>{room.users}</h1>
-          <div>
+          <div style={{ fontSize: '30px', fontWeight: 'bold' }}>
+            참여한 유저 _id : {otherUserIdx}
+          </div>
+          <div
+            style={{
+              width: '750px',
+              height: '500px',
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+              overflowY: 'scroll',
+            }}
+          >
             {room.messages.map((m, k) => (
-              <div key={k}>
-                <h3>{m._id}</h3>
-                <h3>{m.contents}</h3>
-                <h3>{m.date}</h3>
-                <h3>{m.read}</h3>
-                <h3>{m.writer}</h3>
-              </div>
+              <RoomPageBoxMessageBox
+                className={m.writer === meIdx ? 'right' : 'left'}
+                key={k}
+              >
+                <RoomPageBoxMessageBoxContents>
+                  {m.contents}
+                </RoomPageBoxMessageBoxContents>
+              </RoomPageBoxMessageBox>
             ))}
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              width: '100%',
+            }}
+          >
+            <RoomPageBoxBackBtn
+              onClick={() => {
+                onBlurRoom();
+              }}
+            >
+              돌아가기
+            </RoomPageBoxBackBtn>
+            <RoomPageBoxBackBtn
+              onClick={async () => {
+                if (!meIdx || !otherUserIdx) return;
+                const contents = '빼에에에에에에ㅔ에엒!!!!!!!!!!!!';
+                setRoom({
+                  ...room,
+                  messages: await sendMessage(meIdx, otherUserIdx, contents),
+                });
+              }}
+            >
+              보내기!!!
+            </RoomPageBoxBackBtn>
           </div>
         </>
       ) : (
         <div>...</div>
       )}
-      <RoomPageBoxBackBtn
-        onClick={() => {
-          onBlurRoom();
-        }}
-      >
-        돌아가기
-      </RoomPageBoxBackBtn>
     </RoomPageBox>
   );
 }

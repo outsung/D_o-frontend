@@ -1,22 +1,23 @@
 import callApi from '../../utils/api';
 
-export type getRoomRes = {
+export type getRoomsRes = {
   result: 1 | -1;
-  room: string[];
+  rooms: string[];
+  uncheckedRoom: string[];
 };
-export const getRoom = function () {
-  return callApi.get<{}, getRoomRes>(`users/room`);
+export const getRooms = function () {
+  return callApi.get<{}, getRoomsRes>(`users/rooms`);
 };
 
-export type patchRoomReq = {
-  room: string[];
+export type patchRoomsReq = {
+  rooms: string[];
 };
-export type patchRoomRes = {
+export type patchRoomsRes = {
   result: 1 | -1;
-  room: string[];
+  rooms: string[];
 };
-export const patchRoom = function (req: patchRoomReq) {
-  return callApi.patch<patchRoomReq, patchRoomRes>(`users/room`, req);
+export const patchRooms = function (req: patchRoomsReq) {
+  return callApi.patch<patchRoomsReq, patchRoomsRes>(`users/rooms`, req);
 };
 
 export type message = {
@@ -50,7 +51,7 @@ export const addMessageInRoom = function (
   req: addMessageInRoomReq,
 ) {
   return callApi.post<addMessageInRoomReq, addMessageInRoomRes>(
-    `rooms/${_id}`,
+    `rooms/user/${_id}`,
     req,
   );
 };

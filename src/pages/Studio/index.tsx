@@ -44,8 +44,9 @@ function getRandomArbitrary(min: number, max: number) {
 
 softShadows({});
 
+const socket = callSocket.connect();
+
 function Studio() {
-  const socket = useRef({} as SocketIOClient.Socket);
   const [mypageClicked, setMypageClicked] = useState(false);
   const [optionClicked, setOptionClicked] = useState(false);
   const [clicked, setClicked] = useState<string>();
@@ -55,13 +56,21 @@ function Studio() {
 
   const { favorites, addFavorites, removeFavorites } = useFavorites();
   const { me, newMe, changeNewMe, onSaveNewMe, onCancelNewMe } = useMypage();
-  const { room, roomClicked, focusRoom, onFocusRoom, onBlurRoom } = useRoom();
+  const {
+    rooms,
+    roomClicked,
+    focusRoom,
+    onFocusRoom,
+    onBlurRoom,
+    sendMessage,
+    setOnMessageOfRoomPage,
+  } = useRoom(socket);
 
   const init = useCallback(async () => {
     setUsers(await allget());
-    socket.current = callSocket.connect();
-    socket.current.emit('login');
-    socket.current.on('online', (onlineString: string[]) => {
+
+    socket.emit('login');
+    socket.on('online', (onlineString: string[]) => {
       setOnlineUsersIdx(onlineString);
     });
   }, []);
@@ -69,7 +78,7 @@ function Studio() {
   useEffect(() => {
     init();
     return () => {
-      callSocket.disconnect(socket.current);
+      callSocket.disconnect(socket);
     };
   }, [init]);
 
@@ -134,13 +143,16 @@ function Studio() {
           !(roomClicked || mypageClicked || optionClicked || Boolean(clicked))
         }
         favorites={favorites}
-        room={room}
+        rooms={rooms}
         onFocusRoom={onFocusRoom}
       />
       <RoomPage
         roomClicked={roomClicked}
         focusRoom={focusRoom}
         onBlurRoom={onBlurRoom}
+        sendMessage={sendMessage}
+        setOnMessageOfRoomPage={setOnMessageOfRoomPage}
+        meIdx={me?._id}
       />
 
       <Canvas

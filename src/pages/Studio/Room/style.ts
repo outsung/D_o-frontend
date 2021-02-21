@@ -63,6 +63,8 @@ export const RoomBoxLately = styled.div`
 `;
 
 export const RoomBoxItem = styled.div<{ url?: string }>`
+  position: relative;
+
   margin: 7px 0px;
   border-radius: 100px;
 
@@ -81,12 +83,30 @@ export const RoomBoxItem = styled.div<{ url?: string }>`
     props.url
       ? `background-image: url(${props.url}); background-size: cover;`
       : `background-color: #adadad;`}
+
+  &.on {
+    &::after {
+      content: '';
+
+      position: absolute;
+      top: 0px;
+      right: 0px;
+
+      display: block;
+      border-radius: 20px;
+
+      width: 10px;
+      height: 10px;
+
+      background-color: red;
+    }
+  }
 `;
 
 export const RoomPageBox = styled.div`
   position: absolute;
-  left: calc(50vw - 250px);
-  top: calc(50vh - 200px);
+  left: calc(50vw - 325px);
+  top: calc(50vh - 300px);
 
   display: flex;
   flex-direction: column;
@@ -95,12 +115,10 @@ export const RoomPageBox = styled.div`
 
   z-index: 1;
 
-  width: 500px;
-  height: 400px;
+  width: 750px;
+  height: 600px;
 
   opacity: 0;
-
-  background-color: rgba(0, 0, 0, 0.3);
 
   pointer-events: none;
 
@@ -110,6 +128,30 @@ export const RoomPageBox = styled.div`
     opacity: 1;
     pointer-events: auto;
   }
+`;
+
+export const RoomPageBoxMessageBox = styled.div`
+  display: flex;
+
+  padding: 13px 8px;
+
+  &.right {
+    justify-content: flex-end;
+  }
+  &.left {
+    justify-content: flex-start;
+  }
+`;
+export const RoomPageBoxMessageBoxContents = styled.div`
+  display: inline-block;
+
+  border-radius: 13px;
+  padding: 5px 8px;
+
+  color: #fff;
+  font-size: 18px;
+
+  background-color: rgba(0, 0, 0, 0.3);
 `;
 
 export const RoomPageBoxBackBtn = styled.div`
