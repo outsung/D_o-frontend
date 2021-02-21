@@ -35,7 +35,7 @@ function Illusion({ children }: illusionProps) {
     ref: illusionRef,
     style: {
       zIndex: 100,
-      position: 'absolute',
+      position: 'fixed',
       opacity: 0,
     },
   });

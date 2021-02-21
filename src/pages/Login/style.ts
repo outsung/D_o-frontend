@@ -29,6 +29,8 @@ export const DuoTitle = styled.div`
   font-weight: bold;
 
   color: #944e61;
+
+  user-select: none;
 `;
 
 const fadeinAnimation = keyframes`
@@ -41,4 +43,17 @@ export const Fadein = styled.div`
 
   animation: ${fadeinAnimation} 2s;
   animation-fill-mode: forwards;
+`;
+
+export const PointerInfo = styled.div`
+  position: absolute;
+
+  color: #fcdb7e;
+  font-weight: bold;
+
+  opacity: 0;
+
+  &.on {
+    opacity: 1;
+  }
 `;

@@ -39,11 +39,6 @@ export const WaitingBnt = styled.div`
 
   transition: all 1s;
 
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 
   &.down {
@@ -81,11 +76,6 @@ export const OptionBtn = styled.div`
   transition: transform 0.5s;
   transition-timing-function: cubic-bezier(0.24, 0.05, 0.445, 1.65);
 
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 
   & > div {
@@ -116,11 +106,6 @@ export const OptionLabel = styled.div`
 
   transition: all 0.5s;
 
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 `;
 
@@ -153,16 +138,88 @@ export const UserInfoBox = styled.div`
 
   transition: all 1s;
 
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+  pointer-events: none;
+
   user-select: none;
 
   &.on {
     opacity: 100;
 
     height: calc(100vh - 14vh);
+  }
+`;
+
+export const AccountMenuBox = styled.div`
+  position: absolute;
+  top: 2.5vh;
+  right: 0.8vw;
+
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+
+  width: 400px;
+  height: 60px;
+
+  z-index: 1;
+
+  &.mypage {
+    & > div {
+      transform: scale(0);
+    }
+    & > #divider {
+      margin-right: -25px;
+
+      width: 3px;
+
+      transform: scale(1);
+    }
+    & > #mypage {
+      margin-right: -80px;
+
+      font-size: 35px;
+
+      transform: scale(1);
+      &:hover {
+        color: #000;
+      }
+    }
+  }
+`;
+export const AccountMenuImage = styled.div`
+  border-radius: 100px;
+
+  width: 50px;
+  height: 50px;
+
+  background-color: #8429f0;
+
+  transition: all 0.5s;
+
+  cursor: pointer;
+`;
+export const AccountMenuDivider = styled.div`
+  margin: 0px 15px;
+
+  width: 1px;
+  height: 70%;
+
+  background-color: black;
+
+  transition: all 0.5s;
+`;
+export const AccountMenuItem = styled.div`
+  margin-left: 10px;
+
+  color: #000;
+  font-size: 19px;
+  font-weight: bold;
+
+  transition: all 0.5s;
+
+  cursor: pointer;
+
+  &:hover {
+    color: #611eb3;
   }
 `;

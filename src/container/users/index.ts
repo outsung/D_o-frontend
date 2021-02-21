@@ -56,12 +56,14 @@ export type allgetRes = {
 
   age: number;
   gender: 'male' | 'female' | 'Private';
+  mic: '있음' | '없음';
 
   nickname: string;
   lolChampion: string;
   lolLevel: string;
   lolTear: string;
   lolLane: string;
+  lolRefreshTime: Date;
 };
 export const allget = function () {
   return callApi.get<{}, [allgetRes]>('users/test');
@@ -75,4 +77,72 @@ export type getByIdxRes = {
 };
 export const getByIdx = function (_id: string) {
   return callApi.get<{}, getByIdxRes>(`users/idx/${_id}`);
+};
+
+// getByJwt
+export type getByJwtRes = {
+  result: 1 | -1;
+  _id: string;
+  id: string;
+
+  age: number;
+  gender: 'male' | 'female' | 'Private';
+  mic: '있음' | '없음';
+
+  nickname: string;
+  lolTear: string;
+  lolLevel: string;
+  lolLane: string;
+  lolChampion: string;
+  lolRefreshTime: Date;
+};
+export const getByJwt = function () {
+  return callApi.get<{}, getByJwtRes>(`users`);
+};
+
+// updateLolInfo
+export type updateLolInfoRes = {
+  result: 1 | -1;
+  _id: string;
+  id: string;
+
+  age: number;
+  gender: 'male' | 'female' | 'Private';
+  mic: '있음' | '없음';
+
+  nickname: string;
+  lolTear: string;
+  lolLevel: string;
+  lolLane: string;
+  lolChampion: string;
+  lolRefreshTime: Date;
+};
+export const updateLolInfo = function (_id: string) {
+  return callApi.get<{}, updateLolInfoRes>(`users/lolInfo/${_id}`);
+};
+
+export type patchUserReq = {
+  age?: number;
+  gender?: string;
+  mic?: string;
+  nickname?: string;
+};
+export type patchUserRes = {
+  result: 1 | -1;
+  _id: string;
+  id: string;
+
+  age: number;
+  gender: 'male' | 'female' | 'Private';
+  mic: '있음' | '없음';
+
+  nickname: string;
+  lolTear: string;
+  lolLevel: string;
+  lolLane: string;
+  lolChampion: string;
+  lolRefreshTime: Date;
+};
+export const patchUser = function (req: patchUserReq) {
+  return callApi.patch<patchUserReq, updateLolInfoRes>(`users`, req);
 };

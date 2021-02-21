@@ -1,46 +1,46 @@
-# Getting Started with Create React App
+# Duo frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+같이 게임을 할 사람 찾는 사이트
 
-## Available Scripts
+## [미리보기](https://outsung.github.io/Duo-frontend/)
 
-In the project directory, you can run:
+테스트 계정
 
-### `npm start`
+- `test@gmail.com`
+- `test`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+<img src="https://github.com/outsung/Duo-frontend/blob/main/public/image/login-page.png" />
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 기능
 
-### `npm test`
+- `React` + `Typescript` + `node js`
+- 이메일 인증 + jwt토큰 기반 자체 로그인 기능
+- `mocha`를 사용한 서버 단위 테스트
+- `three js`, `r3f`, `cannon`, `spring`을 사용한 3D 인터렉티브 기능
+- `matter js`, `google mediapipe`를 사용한 2D 인터렉티브 기능
+- `github action`을 사용한 버전관리, DC 기능
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 버전관리
 
-### `npm run build`
+`github action`을 이용해 `master` 브랜치안에 [hisrtoey](https://github.com/outsung/Duo-frontend/tree/master/history) 폴더에서 확인 가능
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+`https://outsung.github.io/Duo-frontend/history/[원하는 버전]`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2021.02 기준
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- [v.0](https://outsung.github.io/Duo-frontend/history/v.0)
+- [v.1](https://outsung.github.io/Duo-frontend/history/v.1)
+- [v.2](https://outsung.github.io/Duo-frontend/history/v.2)
+- [v.3](https://outsung.github.io/Duo-frontend/history/v.3)
+- [v.3.1](https://outsung.github.io/Duo-frontend/history/v.3.1)
+- [v.3.2](https://outsung.github.io/Duo-frontend/history/v.3.2)
 
-### `npm run eject`
+## 시행착오 및 진행사항
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+outsung.me 에서 확인 가능
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 추가예정
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- 채팅 기능 추가
+- 매칭 설정 기능 추가
+- 모바일 환경 개선

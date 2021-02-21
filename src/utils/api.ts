@@ -1,7 +1,7 @@
 import history from './browserHistory';
 import callCookie from './cookie';
 
-type fetchMethod = 'get' | 'post' | 'put' | 'delete';
+type fetchMethod = 'get' | 'post' | 'put' | 'delete' | 'PATCH';
 
 const errorHandling = async function (response: Response): Promise<boolean> {
   const { text, ok, status } = response;
@@ -81,4 +81,7 @@ export default {
     callApiBase<I, O>(url, 'put', body),
   delete: <I, O>(url: string, body: I): Promise<O | undefined> =>
     callApiBase<I, O>(url, 'delete', body),
+
+  patch: <I, O>(url: string, body: I): Promise<O | undefined> =>
+    callApiBase<I, O>(url, 'PATCH', body),
 };

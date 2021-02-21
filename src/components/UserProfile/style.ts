@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 export const ProfileBox = styled.div`
   display: flex;
@@ -65,15 +65,27 @@ export const FieldLink = styled.div`
   cursor: pointer;
 `;
 
-export const Btn = styled.div<{ isChcek?: boolean }>`
+const refreshing = keyframes`
+  from {
+    transform: rotateZ(0deg);
+  }
+  to {
+    transform: rotateZ(360deg);
+  }
+`;
+export const Btn = styled.div<{ isCheck?: boolean }>`
   position: absolute;
   top: 2px;
   right: 5px;
 
   font-size: 25px;
 
-  color: ${(props) => (props.isChcek ? '#FEB82E' : '#000')};
-  opacity: 0.3;
+  color: ${(props) => (props.isCheck ? '#FEB82E' : '#000')};
+  opacity: 0.5;
 
   cursor: pointer;
+
+  &.refreshing {
+    animation: ${refreshing} 2s infinite;
+  }
 `;

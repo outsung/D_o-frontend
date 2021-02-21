@@ -1,31 +1,42 @@
-import React, { Suspense, useEffect, useState, useRef } from 'react';
+import React, {
+  Suspense,
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+} from 'react';
 // import * as THREE from 'three';
 import { Canvas } from 'react-three-fiber';
 import { softShadows } from '@react-three/drei';
 import { Physics } from '@react-three/cannon';
-import socketio from 'socket.io-client';
-
-import callCookie from '../../utils/cookie';
 
 import { PhyPlane, PhyString } from '../../components/Phy';
 import { PhyBoxInfo } from './PhyBoxInfo';
 import CameraAnimation from './CameraAnimation';
+import { Mypage, PhyBoxMypage, useMypage } from './Mypage';
+import useFavorites from './Favorites';
+import { Room, RoomPage, useRoom } from './Room';
 
+import callSocket from '../../utils/socket';
 // import Controls from '../../utils/Controls';
 import Loader from '../../components/Loader';
+import history from '../../utils/browserHistory';
 
 import UserProfile from '../../components/UserProfile';
 
 import {
   StudioPage,
+  AccountMenuBox,
+  AccountMenuImage,
+  AccountMenuDivider,
+  AccountMenuItem,
   WaitingBnt,
   OptionBtn,
   OptionLabel,
   UserInfoBox,
 } from './style';
 
-// @api
-import { allget, allgetRes } from '../../container/users';
+import { allget, allgetRes, updateLolInfo } from '../../container/users';
 
 function getRandomArbitrary(min: number, max: number) {
   return Math.random() * (max - min) + min;
@@ -33,49 +44,74 @@ function getRandomArbitrary(min: number, max: number) {
 
 softShadows({});
 
-const serverUrl =
-  'https://duo-serverrr.herokuapp.com' || 'http://localhost:5000';
+const socket = callSocket.connect();
 
 function Studio() {
+  const [mypageClicked, setMypageClicked] = useState(false);
   const [optionClicked, setOptionClicked] = useState(false);
   const [clicked, setClicked] = useState<string>();
-  const [users, setUsers] = useState<[allgetRes]>();
+  const [users, setUsers] = useState<allgetRes[]>();
   const [onlineUsersIdx, setOnlineUsersIdx] = useState<string[]>();
   const clickedUserRef = useRef<allgetRes>();
 
-  const [favorites, setFavorites] = useState<string[]>([]);
+  const { favorites, addFavorites, removeFavorites } = useFavorites();
+  const { me, newMe, changeNewMe, onSaveNewMe, onCancelNewMe } = useMypage();
+  const {
+    rooms,
+    roomClicked,
+    focusRoom,
+    onFocusRoom,
+    onBlurRoom,
+    sendMessage,
+    setOnMessageOfRoomPage,
+  } = useRoom(socket);
 
-  const init = async function () {
+  const init = useCallback(async () => {
     setUsers(await allget());
-    setFavorites(['6016b61e3974c70017436583']);
-  };
 
-  useEffect(() => {
-    init();
-  }, []);
-
-  useEffect(() => {
-    const socket = socketio.connect(
-      `${serverUrl}?auth=${callCookie.get('jwt')}`,
-    );
     socket.emit('login');
     socket.on('online', (onlineString: string[]) => {
       setOnlineUsersIdx(onlineString);
     });
-
-    return function () {
-      socket.disconnect();
-    };
   }, []);
+
+  useEffect(() => {
+    init();
+    return () => {
+      callSocket.disconnect(socket);
+    };
+  }, [init]);
+
+  const clickUpdateBtn = async (_id: string) => {
+    if (!users) return;
+    const newUser = await updateLolInfo(_id);
+    if (!newUser) return;
+    setUsers(users.map((u) => (u._id === _id ? newUser : u)));
+  };
 
   if (clicked) clickedUserRef.current = users?.find((u) => u._id === clicked);
 
   return (
     <StudioPage>
+      <AccountMenuBox className={mypageClicked ? 'mypage' : ''}>
+        <AccountMenuImage onClick={() => alert(JSON.stringify(me))} />
+        <AccountMenuDivider id="divider" />
+        <AccountMenuItem id="logout" onClick={() => history.push('/login')}>
+          로그아웃
+        </AccountMenuItem>
+        <AccountMenuItem
+          id="mypage"
+          onClick={() => setMypageClicked(!mypageClicked)}
+        >
+          마이페이지
+        </AccountMenuItem>
+      </AccountMenuBox>
       <WaitingBnt
-        className={`${optionClicked ? 'left' : ''} ${clicked ? 'down' : ''}`}
+        className={`${optionClicked ? 'left' : ''} ${
+          clicked || mypageClicked || roomClicked ? 'down' : ''
+        }`}
       >
-        Next +4
+        매칭 시작
         <OptionBtn
           className={optionClicked ? 'on' : ''}
           onClick={() => setOptionClicked(!optionClicked)}
@@ -83,7 +119,7 @@ function Studio() {
           ⛶<OptionLabel>매칭 설정</OptionLabel>
         </OptionBtn>
       </WaitingBnt>
-      <UserInfoBox className={clicked ? 'on' : ''}>
+      <UserInfoBox className={clicked && !mypageClicked ? 'on' : ''}>
         {clickedUserRef.current ? (
           <>
             <div>{clickedUserRef.current.id}</div>
@@ -97,6 +133,28 @@ function Studio() {
           <div>...</div>
         )}
       </UserInfoBox>
+      <Mypage
+        newMe={newMe}
+        changeNewMe={changeNewMe}
+        mypageClicked={mypageClicked}
+      />
+      <Room
+        isMain={
+          !(roomClicked || mypageClicked || optionClicked || Boolean(clicked))
+        }
+        favorites={favorites}
+        rooms={rooms}
+        onFocusRoom={onFocusRoom}
+      />
+      <RoomPage
+        roomClicked={roomClicked}
+        focusRoom={focusRoom}
+        onBlurRoom={onBlurRoom}
+        sendMessage={sendMessage}
+        setOnMessageOfRoomPage={setOnMessageOfRoomPage}
+        meIdx={me?._id}
+      />
+
       <Canvas
         colorManagement
         shadowMap
@@ -104,7 +162,13 @@ function Studio() {
       >
         <fog attach="fog" args={['white', 0, 40]} />
 
-        <CameraAnimation optionClicked={optionClicked} boxClicked={clicked} />
+        {/* 카메라 */}
+        <CameraAnimation
+          roomClicked={roomClicked}
+          mypageClicked={mypageClicked}
+          optionClicked={optionClicked}
+          boxClicked={clicked}
+        />
 
         {/* 조명 */}
         <ambientLight intensity={0.4} />
@@ -173,13 +237,11 @@ function Studio() {
                     nickname={user.nickname}
                     tear={user.lolTear}
                     lane={user.lolLane}
+                    refreshTime={user.lolRefreshTime}
+                    clickUpdateBtn={clickUpdateBtn}
                     isFavorites={favorites.includes(user._id)}
-                    addFavorites={(idx) => {
-                      setFavorites([...favorites, idx]);
-                    }}
-                    removeFavorites={(idx) => {
-                      setFavorites(favorites.filter((f) => f !== idx));
-                    }}
+                    addFavorites={addFavorites}
+                    removeFavorites={removeFavorites}
                   />
                 </PhyBoxInfo>
               ))
@@ -197,6 +259,24 @@ function Studio() {
               type="Static"
               meshProps={{ receiveShadow: true, castShadow: true }}
             />
+
+            {/* 마이페이지 */}
+            <PhyBoxMypage
+              position={[-5, -5, 0]}
+              mypageClicked={mypageClicked}
+              maxSize={2.5}
+              center={[617, 165]}
+              type="save"
+              onReset={onSaveNewMe}
+            />
+            <PhyBoxMypage
+              position={[3, -3, 3]}
+              mypageClicked={mypageClicked}
+              maxSize={1.5}
+              center={[-465, -215]}
+              type="cancel"
+              onReset={onCancelNewMe}
+            />
           </Physics>
 
           {/* plane */}
@@ -210,8 +290,8 @@ function Studio() {
           </mesh>
         </Suspense>
 
-        {/* <Controls />
-        <gridHelper /> */}
+        {/* <Controls /> */}
+        <gridHelper />
       </Canvas>
     </StudioPage>
   );
