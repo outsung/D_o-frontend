@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/Duo-frontend/history/v.3.2/static/css/main.7bb05dfd.chunk.css",
+    "main.js": "/Duo-frontend/history/v.3.2/static/js/main.7e7200f0.chunk.js",
+    "main.js.map": "/Duo-frontend/history/v.3.2/static/js/main.7e7200f0.chunk.js.map",
+    "runtime-main.js": "/Duo-frontend/history/v.3.2/static/js/runtime-main.12e8e8ee.js",
+    "runtime-main.js.map": "/Duo-frontend/history/v.3.2/static/js/runtime-main.12e8e8ee.js.map",
+    "static/js/2.a33e278c.chunk.js": "/Duo-frontend/history/v.3.2/static/js/2.a33e278c.chunk.js",
+    "static/js/2.a33e278c.chunk.js.map": "/Duo-frontend/history/v.3.2/static/js/2.a33e278c.chunk.js.map",
+    "static/js/3.d54bbede.chunk.js": "/Duo-frontend/history/v.3.2/static/js/3.d54bbede.chunk.js",
+    "static/js/3.d54bbede.chunk.js.map": "/Duo-frontend/history/v.3.2/static/js/3.d54bbede.chunk.js.map",
+    "static/js/4.a5f051bd.chunk.js": "/Duo-frontend/history/v.3.2/static/js/4.a5f051bd.chunk.js",
+    "static/js/4.a5f051bd.chunk.js.map": "/Duo-frontend/history/v.3.2/static/js/4.a5f051bd.chunk.js.map",
+    "index.html": "/Duo-frontend/history/v.3.2/index.html",
+    "static/css/main.7bb05dfd.chunk.css.map": "/Duo-frontend/history/v.3.2/static/css/main.7bb05dfd.chunk.css.map",
+    "static/js/2.a33e278c.chunk.js.LICENSE.txt": "/Duo-frontend/history/v.3.2/static/js/2.a33e278c.chunk.js.LICENSE.txt",
+    "static/media/background.e0cc6fb1.png": "/Duo-frontend/history/v.3.2/static/media/background.e0cc6fb1.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.12e8e8ee.js",
+    "static/js/2.a33e278c.chunk.js",
+    "static/css/main.7bb05dfd.chunk.css",
+    "static/js/main.7e7200f0.chunk.js"
+  ]
+}
