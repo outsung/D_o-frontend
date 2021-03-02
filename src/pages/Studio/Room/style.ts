@@ -101,6 +101,31 @@ export const RoomBoxItem = styled.div<{ url?: string }>`
       background-color: red;
     }
   }
+
+  &:hover {
+    &::after {
+      content: attr(data-email);
+
+      position: absolute;
+      right: 120%;
+      top: calc(50% - 12.5px);
+
+      display: inline-block;
+
+      padding: 5px 5px;
+      border-radius: 6px;
+
+      line-height: 15px;
+      font-size: 15px;
+      color: #fff;
+
+      white-space: nowrap;
+
+      z-index: 1;
+
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+  }
 `;
 
 export const RoomPageBox = styled.div`
@@ -130,7 +155,41 @@ export const RoomPageBox = styled.div`
   }
 `;
 
-export const RoomPageBoxMessageBox = styled.div`
+export const RoomPageUserInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  width: 100%;
+`;
+export const RoomPageUserInfoNickname = styled.a`
+  font-size: 30px;
+  font-weight: bold;
+
+  text-decoration: none;
+  color: #000;
+
+  cursor: pointer;
+`;
+export const RoomPageUserInfoEmail = styled.div`
+  font-size: 15px;
+  font-weight: bold;
+`;
+
+export const RoomPageChatting = styled.div`
+  border-radius: 15px;
+
+  width: 750px;
+  height: 500px;
+
+  background-color: rgba(0, 0, 0, 0.3);
+
+  overflow-y: scroll;
+
+  z-index: 1;
+`;
+
+export const RoomPageMessageBox = styled.div`
   display: flex;
 
   padding: 13px 8px;
@@ -142,7 +201,7 @@ export const RoomPageBoxMessageBox = styled.div`
     justify-content: flex-start;
   }
 `;
-export const RoomPageBoxMessageBoxContents = styled.div`
+export const RoomPageMessageContents = styled.div`
   display: inline-block;
 
   border-radius: 13px;
@@ -154,11 +213,84 @@ export const RoomPageBoxMessageBoxContents = styled.div`
   background-color: rgba(0, 0, 0, 0.3);
 `;
 
-export const RoomPageBoxBackBtn = styled.div`
-  padding: 10px;
-  border-radius: 10px;
+export const RoomPageBackBtn = styled.div`
+  position: absolute;
+  top: 15%;
+  left: -74px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 6px 8px;
+  border-bottom-left-radius: 15px;
+  border-top-left-radius: 15px;
+
+  font-size: 17px;
+  font-weight: bold;
 
   background-color: #fff;
 
+  opacity: 0.3;
+
+  transition: all 0.4s;
+
   cursor: pointer;
+
+  &:hover {
+    left: -84px;
+
+    opacity: 1;
+  }
+`;
+
+export const RoomPageInputBox = styled.div`
+  position: relative;
+
+  width: 100%;
+`;
+
+export const RoomPageInput = styled.input`
+  padding-left: 10px;
+  border: solid 1px #dadada;
+  border-radius: 6px;
+
+  width: 100%;
+  height: 45px;
+
+  font-size: 16px;
+
+  background: #fffafa;
+
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+  }
+`;
+export const RoomPageInputBtn = styled.div`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 6px;
+
+  width: 60px;
+  height: 35px;
+
+  background-color: rgba(166, 88, 109, 0.8);
+  opacity: 1;
+
+  cursor: pointer;
+
+  &.off {
+    background-color: rgba(0, 0, 0, 0.4);
+    opacity: 0.5;
+
+    pointer-events: none;
+  }
 `;

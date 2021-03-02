@@ -44,9 +44,8 @@ function getRandomArbitrary(min: number, max: number) {
 
 softShadows({});
 
-const socket = callSocket.connect();
-
 function Studio() {
+  const [socket, setSocket] = useState<SocketIOClient.Socket>();
   const [mypageClicked, setMypageClicked] = useState(false);
   const [optionClicked, setOptionClicked] = useState(false);
   const [clicked, setClicked] = useState<string>();
@@ -68,19 +67,25 @@ function Studio() {
 
   const init = useCallback(async () => {
     setUsers(await allget());
-
-    socket.emit('login');
-    socket.on('online', (onlineString: string[]) => {
-      setOnlineUsersIdx(onlineString);
-    });
   }, []);
-
   useEffect(() => {
     init();
-    return () => {
-      callSocket.disconnect(socket);
-    };
   }, [init]);
+
+  useEffect(() => {
+    const _socket = callSocket.connect();
+
+    setSocket(_socket);
+
+    _socket.emit('login');
+    _socket.on('online', (onlineString: string[]) => {
+      setOnlineUsersIdx(onlineString);
+    });
+
+    return () => {
+      callSocket.disconnect(_socket);
+    };
+  }, []);
 
   const clickUpdateBtn = async (_id: string) => {
     if (!users) return;

@@ -31,9 +31,6 @@ function randomSizeGenerator() {
   return Math.random() + 0.1;
 }
 
-const TEST =
-  'https://s3.us-west-2.amazonaws.com/secure.notion-static.com/8d66f61f-4cde-446b-8046-170777277cd9/outsung.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20210216%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210216T105108Z&X-Amz-Expires=86400&X-Amz-Signature=9abea07855cccd82aa1623cb1a22520d092eff97b4b09c52b27a4110ae74ada8&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22outsung.png%22';
-
 export function useMypage() {
   const [me, setMe] = useState<allgetRes>();
   const [newMe, setNewMe] = useState(me);
@@ -116,7 +113,7 @@ export function Mypage({ newMe, changeNewMe, mypageClicked }: mypageProps) {
             <MypageTitle>계정 설정</MypageTitle>
             <MypageFieldBox className="main-info">
               <MypageFieldImageBox>
-                <MypageFieldImage url={TEST} />
+                <MypageFieldImage />
               </MypageFieldImageBox>
 
               <MypageFieldText>{newMe.id}</MypageFieldText>

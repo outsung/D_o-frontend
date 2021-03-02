@@ -60,10 +60,14 @@ export const MypageFieldImageBox = styled.div`
 
   overflow: hidden;
 `;
-export const MypageFieldImage = styled.div<{ url: string }>`
+export const MypageFieldImage = styled.div<{ url?: string }>`
   width: 80px;
   height: 80px;
-  background-image: url(${(props) => props.url});
+  ${(props) =>
+    props.url
+      ? `background-image: url(${props.url})`
+      : `background-color: green`}
+
   background-size: cover;
 `;
 export const MypageFieldText = styled.div`

@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 
 import {
   getRooms,
@@ -7,6 +13,7 @@ import {
   addMessageInRoom,
   message,
 } from '../../../container/room';
+import { getByIdx, getByIdxRes } from '../../../container/users';
 
 import {
   RoomBox,
@@ -15,13 +22,22 @@ import {
   RoomBoxDivider,
   RoomBoxLately,
   RoomBoxItem,
+  RoomPageBackBtn,
   RoomPageBox,
-  RoomPageBoxMessageBox,
-  RoomPageBoxMessageBoxContents,
-  RoomPageBoxBackBtn,
+  RoomPageUserInfo,
+  RoomPageUserInfoEmail,
+  RoomPageUserInfoNickname,
+  RoomPageChatting,
+  RoomPageMessageBox,
+  RoomPageMessageContents,
+  RoomPageInputBox,
+  RoomPageInput,
+  RoomPageInputBtn,
 } from './style';
 
-export function useRoom(socket: SocketIOClient.Socket) {
+import Skeleton from '../../../utils/Skeleton';
+
+export function useRoom(socket: SocketIOClient.Socket | undefined) {
   const [rooms, setRooms] = useState<{ userIdx: string; alarm: boolean }[]>([]);
   const [focusRoom, setFocusRoom] = useState('');
   const roomClicked = Boolean(focusRoom);
@@ -45,33 +61,29 @@ export function useRoom(socket: SocketIOClient.Socket) {
     const onMessageOfRoom = (from: string) => {
       if (!rooms.find((r) => r.userIdx === from))
         setRooms([...rooms, { userIdx: from, alarm: true }]);
-      else {
+      else if (focusRoom !== from)
         setRooms(
           rooms.map((r) => (r.userIdx === from ? { ...r, alarm: true } : r)),
         );
-      }
     };
-    socket.on('message', onMessageOfRoom);
-    return () => {
-      socket.off('message', onMessageOfRoom);
-    };
-  }, [socket, rooms]);
 
-  function setOnMessageOfRoomPage(
-    _id: string | undefined,
-    initOfRoomPage: () => void,
-  ) {
+    socket?.on('message', onMessageOfRoom);
+    return () => {
+      socket?.off('message', onMessageOfRoom);
+    };
+  }, [socket, rooms, focusRoom]);
+
+  function setOnMessageOfRoomPage(initOfRoomPage: () => void) {
     const onMessageOfRoomPage = (from: string) => {
-      if (from !== _id) return;
-      initOfRoomPage();
+      if (from === focusRoom) initOfRoomPage();
     };
 
     return [
       () => {
-        socket.on('message', onMessageOfRoomPage);
+        socket?.on('message', onMessageOfRoomPage);
       },
       () => {
-        socket.off('message', onMessageOfRoomPage);
+        socket?.off('message', onMessageOfRoomPage);
       },
     ];
   }
@@ -93,7 +105,7 @@ export function useRoom(socket: SocketIOClient.Socket) {
     // console.log('res!!', res);
     if (!res || res.result !== 1) return [];
 
-    socket.emit('message', to);
+    socket?.emit('message', to);
 
     return res.messages;
   };
@@ -117,6 +129,35 @@ type roomProps = {
   // itemClick: () => void;
 };
 export function Room({ isMain, favorites, rooms, onFocusRoom }: roomProps) {
+  const [emailArray, setEmailArray] = useState<
+    {
+      _id: string;
+      email: string;
+    }[]
+  >();
+
+  const init = useMemo(
+    () => async () => {
+      const set = new Set([...favorites, ...rooms.map((r) => r.userIdx)]);
+      const uniqueArr = Array.from(set);
+
+      const getByIdxResArray = await Promise.all(
+        uniqueArr.map((idx) => getByIdx(idx)),
+      );
+
+      const res = getByIdxResArray.map((r) =>
+        r?.result === 1 ? { _id: r.idx, email: r.id } : { _id: '', email: '' },
+      );
+
+      setEmailArray(res);
+    },
+    [favorites, rooms],
+  );
+
+  useEffect(() => {
+    init();
+  }, [init]);
+
   const isFavorites = Boolean(favorites.length);
 
   const itemClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -129,7 +170,14 @@ export function Room({ isMain, favorites, rooms, onFocusRoom }: roomProps) {
       <RoomBoxUl>
         <RoomBoxFavorites className={isFavorites ? '' : 'off'}>
           {favorites.map((f, k) => (
-            <RoomBoxItem key={k} onClick={itemClick} data-idx={f} />
+            <RoomBoxItem
+              key={k}
+              onClick={itemClick}
+              data-idx={f}
+              data-email={
+                emailArray ? emailArray.find((e) => e._id === f)?.email : ''
+              }
+            />
           ))}
         </RoomBoxFavorites>
         <RoomBoxDivider className={isFavorites ? '' : 'off'} />
@@ -140,10 +188,17 @@ export function Room({ isMain, favorites, rooms, onFocusRoom }: roomProps) {
               onClick={itemClick}
               className={r.alarm ? 'on' : ''}
               data-idx={r.userIdx}
+              data-email={
+                emailArray
+                  ? emailArray.find((e) => e._id === r.userIdx)?.email
+                  : ''
+              }
             />
           ))}
         </RoomBoxLately>
-        <RoomBoxItem onClick={itemClick}>+</RoomBoxItem>
+        <RoomBoxItem onClick={itemClick} data-email="추가하기">
+          +
+        </RoomBoxItem>
       </RoomBoxUl>
     </RoomBox>
   );
@@ -158,10 +213,7 @@ type roomPageProps = {
     to: string,
     contents: string,
   ) => Promise<message[]>;
-  setOnMessageOfRoomPage: (
-    _id: string | undefined,
-    initOfRoomPage: () => void,
-  ) => Function[];
+  setOnMessageOfRoomPage: (initOfRoomPage: () => void) => Function[];
   meIdx: string | undefined;
 };
 export function RoomPage({
@@ -172,89 +224,138 @@ export function RoomPage({
   setOnMessageOfRoomPage,
   meIdx,
 }: roomPageProps) {
+  const [contents, setContents] = useState('');
   const [room, setRoom] = useState<getRoomByJwtAndIdxRes>();
+  const [user, setUser] = useState<getByIdxRes>();
+  const ref = useRef({} as HTMLDivElement);
 
   const init = useCallback(async () => {
     if (!focusRoom) return;
-    setRoom(undefined);
 
-    const res = await getRoomByJwtAndIdx(focusRoom);
-    if (res && res.result === 1) setRoom(res);
+    const roomRes = await getRoomByJwtAndIdx(focusRoom);
+    if (roomRes?.result === 1) setRoom(roomRes);
+
+    const userRes = await getByIdx(focusRoom);
+    if (userRes?.result === 1) setUser(userRes);
   }, [focusRoom]);
   useEffect(() => {
     init();
   }, [init]);
 
   useEffect(() => {
-    const [onMessageOfRoomPage, cleanUp] = setOnMessageOfRoomPage(meIdx, init);
+    const [onMessageOfRoomPage, cleanUp] = setOnMessageOfRoomPage(async () => {
+      const res = await getRoomByJwtAndIdx(focusRoom);
+      if (res && res.result === 1) {
+        setRoom(res);
+        ref.current.scrollTop = ref.current.scrollHeight;
+      }
+    });
     onMessageOfRoomPage();
 
     return () => {
       cleanUp();
     };
-  }, [meIdx, init, setOnMessageOfRoomPage]);
+  }, [focusRoom, init, setOnMessageOfRoomPage]);
 
-  // 상대의 idx로 닉네임을 가져와야하나?
+  const onClickSendMessageBtn = async () => {
+    if (!room || !meIdx || !focusRoom) return;
+    setContents('');
 
-  const otherUserIdx = room?.users.find((u) => u !== meIdx);
+    setRoom({
+      ...room,
+      messages: await sendMessage(meIdx, focusRoom, contents),
+    });
+    ref.current.scrollTop = ref.current.scrollHeight;
+  };
 
   return (
     <RoomPageBox className={roomClicked ? 'on' : ''}>
-      {room ? (
+      {room && user ? (
         <>
-          <div style={{ fontSize: '30px', fontWeight: 'bold' }}>
-            참여한 유저 _id : {otherUserIdx}
-          </div>
-          <div
-            style={{
-              width: '750px',
-              height: '500px',
-              backgroundColor: 'rgba(0, 0, 0, 0.3)',
-              overflowY: 'scroll',
+          <RoomPageBackBtn
+            onClick={() => {
+              onBlurRoom();
             }}
           >
+            돌아가기
+          </RoomPageBackBtn>
+          <RoomPageUserInfo>
+            <RoomPageUserInfoNickname
+              target="_blank"
+              href={`https://www.op.gg/summoner/userName=${user.nickname}`}
+            >
+              {user.nickname}
+            </RoomPageUserInfoNickname>
+            <RoomPageUserInfoEmail>{user.id}</RoomPageUserInfoEmail>
+          </RoomPageUserInfo>
+
+          <RoomPageChatting ref={ref}>
             {room.messages.map((m, k) => (
-              <RoomPageBoxMessageBox
+              <RoomPageMessageBox
                 className={m.writer === meIdx ? 'right' : 'left'}
                 key={k}
               >
-                <RoomPageBoxMessageBoxContents>
-                  {m.contents}
-                </RoomPageBoxMessageBoxContents>
-              </RoomPageBoxMessageBox>
+                <RoomPageMessageContents>{m.contents}</RoomPageMessageContents>
+              </RoomPageMessageBox>
             ))}
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              width: '100%',
-            }}
-          >
-            <RoomPageBoxBackBtn
-              onClick={() => {
-                onBlurRoom();
+          </RoomPageChatting>
+
+          <RoomPageInputBox>
+            <RoomPageInput
+              autoComplete="off"
+              name="contents"
+              value={contents}
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                if (e.key === 'Enter') onClickSendMessageBtn();
               }}
-            >
-              돌아가기
-            </RoomPageBoxBackBtn>
-            <RoomPageBoxBackBtn
-              onClick={async () => {
-                if (!meIdx || !otherUserIdx) return;
-                const contents = '빼에에에에에에ㅔ에엒!!!!!!!!!!!!';
-                setRoom({
-                  ...room,
-                  messages: await sendMessage(meIdx, otherUserIdx, contents),
-                });
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setContents(e.target.value);
               }}
+            />
+            <RoomPageInputBtn
+              className={contents ? '' : 'off'}
+              onClick={onClickSendMessageBtn}
             >
-              보내기!!!
-            </RoomPageBoxBackBtn>
-          </div>
+              보내기
+            </RoomPageInputBtn>
+          </RoomPageInputBox>
         </>
       ) : (
-        <div>...</div>
+        <>
+          <RoomPageBackBtn
+            onClick={() => {
+              onBlurRoom();
+            }}
+          >
+            돌아가기
+          </RoomPageBackBtn>
+          <RoomPageUserInfo>
+            <Skeleton width="375px" height="40px" />
+            <Skeleton width="150px" height="20px" />
+          </RoomPageUserInfo>
+
+          <RoomPageChatting>
+            <RoomPageMessageBox className="right">
+              <Skeleton width="250px" height="35px" />
+            </RoomPageMessageBox>
+            <RoomPageMessageBox className="right">
+              <Skeleton width="250px" height="35px" />
+            </RoomPageMessageBox>
+            <RoomPageMessageBox className="left">
+              <Skeleton width="250px" height="35px" />
+            </RoomPageMessageBox>
+            <RoomPageMessageBox className="left">
+              <Skeleton width="250px" height="35px" />
+            </RoomPageMessageBox>
+            <RoomPageMessageBox className="right">
+              <Skeleton width="250px" height="35px" />
+            </RoomPageMessageBox>
+          </RoomPageChatting>
+
+          <RoomPageInputBox>
+            <Skeleton width="100%" height="45px" />
+          </RoomPageInputBox>
+        </>
       )}
     </RoomPageBox>
   );

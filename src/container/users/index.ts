@@ -74,6 +74,7 @@ export type getByIdxRes = {
   result: 1 | -1;
   idx: string;
   id: string;
+  nickname: string;
 };
 export const getByIdx = function (_id: string) {
   return callApi.get<{}, getByIdxRes>(`users/idx/${_id}`);
