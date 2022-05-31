@@ -22,7 +22,7 @@
 
 ## 버전관리
 
-`github action`을 이용해 `master` 브랜치안에 [hisrtoey](https://github.com/outsung/Duo-frontend/tree/master/history) 폴더에서 확인 가능
+`github action`을 이용해 `master` 브랜치안에 [history](https://github.com/outsung/Duo-frontend/tree/master/history) 폴더에서 확인 가능
 
 `https://outsung.github.io/Duo-frontend/history/[원하는 버전]`
 
